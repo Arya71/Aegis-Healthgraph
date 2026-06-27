@@ -1,0 +1,165 @@
+{
+  "patient_001": [
+    {
+      "q": "Has this patient had similar symptoms before?",
+      "a": "Yes. The current kidney inflammation connects to a malar rash (Mar 2023), intermittent joint pain (Jan 2024), and an elevated ANA titer (Apr 2024) -- an autoimmune cluster spanning two years.",
+      "confidence": 87,
+      "evidence": [
+        "e9",
+        "e12",
+        "e13",
+        "e16"
+      ]
+    },
+    {
+      "q": "Why is this patient fatigued?",
+      "a": "Fatigue began 3 days after the Metoprolol dose increase to 50mg in Feb 2022. It is most consistent with a medication effect rather than an unexplained cause.",
+      "confidence": 78,
+      "evidence": [
+        "e4",
+        "e5"
+      ]
+    },
+    {
+      "q": "Are there any dangerous drug interactions right now?",
+      "a": "Yes. Clarithromycin inhibits CYP3A4, which clears atorvastatin. Combined with reduced kidney function (eGFR 58), statin exposure and toxicity risk rise ~62%.",
+      "confidence": 62,
+      "evidence": [
+        "e17",
+        "e18",
+        "e19"
+      ]
+    },
+    {
+      "q": "What explains the morning glucose spikes?",
+      "a": "They follow nights with REM sleep under 45 minutes, which follow late dinners. It is a self-reinforcing loop now tracking with weight gain and prediabetes.",
+      "confidence": 81,
+      "evidence": [
+        "e7",
+        "e8",
+        "e11",
+        "e15"
+      ]
+    },
+    {
+      "q": "What is the patient's mental-health pattern?",
+      "a": "Anxiety is periodic: Sunday evenings and the week before quarterly performance reviews. Therapy notes a year later independently confirmed the same pattern.",
+      "confidence": 74,
+      "evidence": [
+        "e10",
+        "e14"
+      ]
+    }
+  ],
+  "patient_002": [
+    {
+      "q": "Is this patient's memory declining?",
+      "a": "Yes. Over 60 days, family-relationship recall dropped ~32% and language complexity fell from 100 to 79. The decline is steady, not episodic.",
+      "confidence": 83,
+      "evidence": [
+        "n3",
+        "n6"
+      ]
+    }
+  ],
+  "patient_003": [
+    {
+      "q": "Any hidden patterns?",
+      "a": "Nothing high-confidence yet. Known issues: type 2 diabetes, hypertension.",
+      "confidence": 55,
+      "evidence": [
+        "patient_003_e2"
+      ]
+    }
+  ],
+  "patient_004": [
+    {
+      "q": "Any hidden patterns?",
+      "a": "Nothing high-confidence yet. Known issues: migraine, anxiety.",
+      "confidence": 55,
+      "evidence": [
+        "patient_004_e2"
+      ]
+    }
+  ],
+  "patient_005": [
+    {
+      "q": "Any hidden patterns?",
+      "a": "Nothing high-confidence yet. Known issues: atrial fibrillation, polypharmacy.",
+      "confidence": 55,
+      "evidence": [
+        "patient_005_e2"
+      ]
+    }
+  ],
+  "patient_006": [
+    {
+      "q": "Any hidden patterns?",
+      "a": "Nothing high-confidence yet. Known issues: hypothyroidism, vitamin d deficiency.",
+      "confidence": 55,
+      "evidence": [
+        "patient_006_e2"
+      ]
+    }
+  ],
+  "patient_007": [
+    {
+      "q": "Any hidden patterns?",
+      "a": "Nothing high-confidence yet. Known issues: asthma, seasonal allergies.",
+      "confidence": 55,
+      "evidence": [
+        "patient_007_e2"
+      ]
+    }
+  ],
+  "patient_008": [
+    {
+      "q": "Any hidden patterns?",
+      "a": "Nothing high-confidence yet. Known issues: rheumatoid arthritis.",
+      "confidence": 55,
+      "evidence": [
+        "patient_008_e2"
+      ]
+    }
+  ],
+  "patient_009": [
+    {
+      "q": "Any hidden patterns?",
+      "a": "Nothing high-confidence yet. Known issues: gerd, high cholesterol.",
+      "confidence": 55,
+      "evidence": [
+        "patient_009_e2"
+      ]
+    }
+  ],
+  "patient_010": [
+    {
+      "q": "Any hidden patterns?",
+      "a": "Nothing high-confidence yet. Known issues: pcos, insulin resistance.",
+      "confidence": 55,
+      "evidence": [
+        "patient_010_e2"
+      ]
+    }
+  ],
+  "patient_011": [
+    {
+      "q": "Any hidden patterns?",
+      "a": "Nothing high-confidence yet. Known issues: osteoporosis, mild cognitive complaints.",
+      "confidence": 55,
+      "evidence": [
+        "patient_011_e2"
+      ]
+    }
+  ],
+  "patient_012": [
+    {
+      "q": "Any hidden patterns?",
+      "a": "Nothing high-confidence yet. Known issues: chronic kidney disease stage 2.",
+      "confidence": 55,
+      "evidence": [
+        "patient_012_e2"
+      ]
+    }
+  ]
+}

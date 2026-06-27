@@ -1,0 +1,219 @@
+{
+  "patient_001": [
+    {
+      "id": "i1",
+      "module": "curie",
+      "confidence": 87,
+      "crossModule": false,
+      "title": "Early-onset lupus pattern across 4 years",
+      "body": "The sudden kidney inflammation is structurally similar to autoimmune progressions. This patient had a malar rash (2023), intermittent joint pain (2024), and an elevated ANA titer (1:320) that was never followed up. Combined similarity to early-onset lupus: 87%.",
+      "evidence": [
+        "e9",
+        "e12",
+        "e13",
+        "e16",
+        "c_lupus"
+      ]
+    },
+    {
+      "id": "i2",
+      "module": "medsync",
+      "confidence": 78,
+      "crossModule": false,
+      "title": "Fatigue is iatrogenic, not idiopathic",
+      "body": "Persistent fatigue began within 3 days of the Metoprolol increase to 50mg. A similar timeline appears in many beta-blocker dose changes. The fatigue was worked up as unexplained for 2 years.",
+      "evidence": [
+        "e4",
+        "e5"
+      ]
+    },
+    {
+      "id": "i3",
+      "module": "rxshield",
+      "confidence": 62,
+      "crossModule": false,
+      "title": "Hidden statin toxicity risk via CYP3A4",
+      "body": "Clarithromycin inhibits CYP3A4; atorvastatin is cleared by CYP3A4. With reduced kidney function (eGFR 58), estimated statin exposure rises sharply. Estimated toxicity risk increases by 62%.",
+      "evidence": [
+        "e17",
+        "e18",
+        "e19",
+        "c_cyp3a4"
+      ]
+    },
+    {
+      "id": "i4",
+      "module": "nutrisim",
+      "confidence": 81,
+      "crossModule": false,
+      "title": "A self-reinforcing sleep-glucose loop",
+      "body": "Morning glucose spikes occur almost exclusively after nights with REM under 45 minutes. Late dinners feed poor sleep; poor sleep feeds spikes; spikes track with +6kg and a prediabetic HbA1c of 6.1%.",
+      "evidence": [
+        "e6",
+        "e7",
+        "e8",
+        "e11",
+        "e15",
+        "c_metabolic"
+      ]
+    },
+    {
+      "id": "i5",
+      "module": "pathos",
+      "confidence": 74,
+      "crossModule": false,
+      "title": "Sunday-evening anxiety is periodic, not random",
+      "body": "Anxiety spikes cluster on Sunday evenings and in the week before quarterly reviews. This is the same pattern the patient's therapy notes flagged a year later.",
+      "evidence": [
+        "e10",
+        "e14"
+      ]
+    }
+  ],
+  "patient_002": [
+    {
+      "id": "ni1",
+      "module": "neurograph",
+      "confidence": 83,
+      "crossModule": false,
+      "title": "Family relationship recall down 32% in 60 days",
+      "body": "Across conversations, correct recall of family relationships fell from 96 to 64. Pronoun substitution ('she', 'that person') increased, and semantic retrieval latency roughly doubled. The personal knowledge graph itself is thinning -- not just test scores.",
+      "evidence": [
+        "n3",
+        "n6",
+        "ent0",
+        "ent4"
+      ]
+    }
+  ],
+  "patient_003": [
+    {
+      "id": "patient_003_i1",
+      "module": "curie",
+      "confidence": 55,
+      "crossModule": false,
+      "title": "No urgent cross-references found",
+      "body": "History is consistent with type 2 diabetes, hypertension; no hidden multi-year pattern detected yet.",
+      "evidence": [
+        "patient_003_e2"
+      ]
+    }
+  ],
+  "patient_004": [
+    {
+      "id": "patient_004_i1",
+      "module": "curie",
+      "confidence": 55,
+      "crossModule": false,
+      "title": "No urgent cross-references found",
+      "body": "History is consistent with migraine, anxiety; no hidden multi-year pattern detected yet.",
+      "evidence": [
+        "patient_004_e2"
+      ]
+    }
+  ],
+  "patient_005": [
+    {
+      "id": "patient_005_i1",
+      "module": "curie",
+      "confidence": 55,
+      "crossModule": false,
+      "title": "No urgent cross-references found",
+      "body": "History is consistent with atrial fibrillation, polypharmacy; no hidden multi-year pattern detected yet.",
+      "evidence": [
+        "patient_005_e2"
+      ]
+    }
+  ],
+  "patient_006": [
+    {
+      "id": "patient_006_i1",
+      "module": "curie",
+      "confidence": 55,
+      "crossModule": false,
+      "title": "No urgent cross-references found",
+      "body": "History is consistent with hypothyroidism, vitamin d deficiency; no hidden multi-year pattern detected yet.",
+      "evidence": [
+        "patient_006_e2"
+      ]
+    }
+  ],
+  "patient_007": [
+    {
+      "id": "patient_007_i1",
+      "module": "curie",
+      "confidence": 55,
+      "crossModule": false,
+      "title": "No urgent cross-references found",
+      "body": "History is consistent with asthma, seasonal allergies; no hidden multi-year pattern detected yet.",
+      "evidence": [
+        "patient_007_e2"
+      ]
+    }
+  ],
+  "patient_008": [
+    {
+      "id": "patient_008_i1",
+      "module": "curie",
+      "confidence": 55,
+      "crossModule": false,
+      "title": "No urgent cross-references found",
+      "body": "History is consistent with rheumatoid arthritis; no hidden multi-year pattern detected yet.",
+      "evidence": [
+        "patient_008_e2"
+      ]
+    }
+  ],
+  "patient_009": [
+    {
+      "id": "patient_009_i1",
+      "module": "curie",
+      "confidence": 55,
+      "crossModule": false,
+      "title": "No urgent cross-references found",
+      "body": "History is consistent with gerd, high cholesterol; no hidden multi-year pattern detected yet.",
+      "evidence": [
+        "patient_009_e2"
+      ]
+    }
+  ],
+  "patient_010": [
+    {
+      "id": "patient_010_i1",
+      "module": "curie",
+      "confidence": 55,
+      "crossModule": false,
+      "title": "No urgent cross-references found",
+      "body": "History is consistent with pcos, insulin resistance; no hidden multi-year pattern detected yet.",
+      "evidence": [
+        "patient_010_e2"
+      ]
+    }
+  ],
+  "patient_011": [
+    {
+      "id": "patient_011_i1",
+      "module": "curie",
+      "confidence": 55,
+      "crossModule": false,
+      "title": "No urgent cross-references found",
+      "body": "History is consistent with osteoporosis, mild cognitive complaints; no hidden multi-year pattern detected yet.",
+      "evidence": [
+        "patient_011_e2"
+      ]
+    }
+  ],
+  "patient_012": [
+    {
+      "id": "patient_012_i1",
+      "module": "curie",
+      "confidence": 55,
+      "crossModule": false,
+      "title": "No urgent cross-references found",
+      "body": "History is consistent with chronic kidney disease stage 2; no hidden multi-year pattern detected yet.",
+      "evidence": [
+        "patient_012_e2"
+      ]
+    }
+  ]
+}

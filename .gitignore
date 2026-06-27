@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+backend/.venv/
+.venv/
+*.egg-info/
+
+# Node
+node_modules/
+frontend/dist/
+*.log
+
+# Env / secrets
+.env
+.env.local
+
+# Cognee local stores (generated in live mode)
+.cognee_system/
+cognee_data/
+*.lance/
+*.sqlite
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

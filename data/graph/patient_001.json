@@ -1,0 +1,438 @@
+{
+  "nodes": [
+    {
+      "id": "e1",
+      "label": "Chest tightness on exertion",
+      "type": "symptom",
+      "module": "curie",
+      "date": "2021-11-04",
+      "detail": "Reported during a brisk walk; resolved with rest.",
+      "weight": 0.8
+    },
+    {
+      "id": "e2",
+      "label": "Cardiology consult",
+      "type": "visit",
+      "module": "medsync",
+      "date": "2021-11-12",
+      "detail": "ECG normal. Started on a beta-blocker for suspected exertional angina.",
+      "weight": 0.7
+    },
+    {
+      "id": "e3",
+      "label": "Metoprolol 25mg started",
+      "type": "medication",
+      "module": "rxshield",
+      "date": "2021-11-12",
+      "detail": "Beta-blocker. Metabolized in part via CYP2D6.",
+      "weight": 0.7
+    },
+    {
+      "id": "e4",
+      "label": "Metoprolol increased to 50mg",
+      "type": "medication",
+      "module": "rxshield",
+      "date": "2022-02-20",
+      "detail": "Dosage increase after follow-up.",
+      "weight": 0.7
+    },
+    {
+      "id": "e5",
+      "label": "New persistent fatigue",
+      "type": "symptom",
+      "module": "curie",
+      "date": "2022-02-23",
+      "detail": "Began ~3 days after the dosage increase.",
+      "weight": 0.8
+    },
+    {
+      "id": "e6",
+      "label": "Late-night dinners become routine",
+      "type": "lifestyle",
+      "module": "nutrisim",
+      "date": "2022-06-10",
+      "detail": "Work stress; dinner regularly after 10pm.",
+      "weight": 0.7
+    },
+    {
+      "id": "e7",
+      "label": "Poor sleep (avg 5.2h, low REM)",
+      "type": "metric",
+      "module": "nutrisim",
+      "date": "2022-09-01",
+      "detail": "Wearable shows fragmented sleep, REM < 45 min on bad nights.",
+      "weight": 0.7
+    },
+    {
+      "id": "e8",
+      "label": "Morning glucose spikes",
+      "type": "metric",
+      "module": "nutrisim",
+      "date": "2022-09-15",
+      "detail": "CGM: fasting spikes to 140-160 on mornings after poor sleep.",
+      "weight": 0.7
+    },
+    {
+      "id": "e9",
+      "label": "Unexplained skin rash",
+      "type": "symptom",
+      "module": "curie",
+      "date": "2023-03-18",
+      "detail": "Malar-pattern rash across cheeks; attributed to sun.",
+      "weight": 0.8
+    },
+    {
+      "id": "e10",
+      "label": "Sunday-evening anxiety pattern",
+      "type": "mental",
+      "module": "pathos",
+      "date": "2023-05-02",
+      "detail": "Recurring dread before Monday; tied to performance reviews.",
+      "weight": 0.7
+    },
+    {
+      "id": "e11",
+      "label": "Weight gain +6kg over 9 months",
+      "type": "metric",
+      "module": "nutrisim",
+      "date": "2023-08-22",
+      "detail": "Despite no diet change.",
+      "weight": 0.7
+    },
+    {
+      "id": "e12",
+      "label": "Intermittent joint pain",
+      "type": "symptom",
+      "module": "curie",
+      "date": "2024-01-14",
+      "detail": "Wrists and knuckles, worse in the morning.",
+      "weight": 0.9
+    },
+    {
+      "id": "e13",
+      "label": "Elevated ANA titer 1:320",
+      "type": "lab",
+      "module": "curie",
+      "date": "2024-04-09",
+      "detail": "Ordered for fatigue workup; flagged but not followed up.",
+      "weight": 0.7
+    },
+    {
+      "id": "e14",
+      "label": "Therapy: work rumination + insomnia",
+      "type": "mental",
+      "module": "pathos",
+      "date": "2024-04-09",
+      "detail": "CBT homework started. Anxiety clusters before quarterly reviews.",
+      "weight": 0.7
+    },
+    {
+      "id": "e15",
+      "label": "HbA1c 6.1% (prediabetic)",
+      "type": "metric",
+      "module": "nutrisim",
+      "date": "2024-10-30",
+      "detail": "Crossed into prediabetic range.",
+      "weight": 0.7
+    },
+    {
+      "id": "e16",
+      "label": "Sudden kidney inflammation",
+      "type": "symptom",
+      "module": "curie",
+      "date": "2025-05-21",
+      "detail": "Presented with edema + proteinuria. Trigger for full workup.",
+      "weight": 1.0
+    },
+    {
+      "id": "e17",
+      "label": "Clarithromycin started (infection)",
+      "type": "medication",
+      "module": "rxshield",
+      "date": "2025-05-22",
+      "detail": "Strong CYP3A4 inhibitor.",
+      "weight": 0.7
+    },
+    {
+      "id": "e18",
+      "label": "On atorvastatin (prior)",
+      "type": "medication",
+      "module": "rxshield",
+      "date": "2025-05-22",
+      "detail": "Statin; cleared via CYP3A4.",
+      "weight": 0.7
+    },
+    {
+      "id": "e19",
+      "label": "Reduced kidney function (eGFR 58)",
+      "type": "lab",
+      "module": "curie",
+      "date": "2025-05-25",
+      "detail": "Lowers clearance of accumulating drugs.",
+      "weight": 0.7
+    },
+    {
+      "id": "e20",
+      "label": "Curie flag: early-onset lupus pattern",
+      "type": "diagnosis",
+      "module": "curie",
+      "date": "2025-05-26",
+      "detail": "Rash + joint pain + ANA + nephritis cluster.",
+      "weight": 1.0
+    },
+    {
+      "id": "c_lupus",
+      "label": "Early-Onset Lupus (SLE)",
+      "type": "diagnosis",
+      "module": "curie",
+      "date": null,
+      "detail": "Autoimmune pattern",
+      "weight": 1.4
+    },
+    {
+      "id": "c_cyp3a4",
+      "label": "CYP3A4 metabolic pathway",
+      "type": "lab",
+      "module": "rxshield",
+      "date": null,
+      "detail": "Drug-metabolizing enzyme",
+      "weight": 1.1
+    },
+    {
+      "id": "c_cyp2d6",
+      "label": "CYP2D6 metabolic pathway",
+      "type": "lab",
+      "module": "rxshield",
+      "date": null,
+      "detail": "Drug-metabolizing enzyme",
+      "weight": 0.9
+    },
+    {
+      "id": "c_metabolic",
+      "label": "Metabolic syndrome risk",
+      "type": "diagnosis",
+      "module": "nutrisim",
+      "date": null,
+      "detail": "Sleep-glucose-weight loop",
+      "weight": 1.2
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1->e2",
+      "source": "e1",
+      "target": "e2",
+      "relation": "led to consult",
+      "weight": 0.9,
+      "rationale": "Chest tightness prompted cardiology referral."
+    },
+    {
+      "id": "e2->e3",
+      "source": "e2",
+      "target": "e3",
+      "relation": "prescribed",
+      "weight": 0.95,
+      "rationale": "Beta-blocker started at the cardiology visit."
+    },
+    {
+      "id": "e3->e4",
+      "source": "e3",
+      "target": "e4",
+      "relation": "dose adjusted",
+      "weight": 0.9,
+      "rationale": "Same drug, increased dose."
+    },
+    {
+      "id": "e4->e5",
+      "source": "e4",
+      "target": "e5",
+      "relation": "temporally precedes",
+      "weight": 0.82,
+      "rationale": "Fatigue began 3 days after the increase."
+    },
+    {
+      "id": "e4->c_cyp2d6",
+      "source": "e4",
+      "target": "c_cyp2d6",
+      "relation": "metabolized by",
+      "weight": 0.6,
+      "rationale": "Metoprolol clears via CYP2D6."
+    },
+    {
+      "id": "e6->e7",
+      "source": "e6",
+      "target": "e7",
+      "relation": "contributes to",
+      "weight": 0.78,
+      "rationale": "Late dinners fragment sleep."
+    },
+    {
+      "id": "e7->e8",
+      "source": "e7",
+      "target": "e8",
+      "relation": "drives",
+      "weight": 0.85,
+      "rationale": "Poor/low-REM sleep precedes morning glucose spikes."
+    },
+    {
+      "id": "e8->e11",
+      "source": "e8",
+      "target": "e11",
+      "relation": "contributes to",
+      "weight": 0.7,
+      "rationale": "Repeated spikes track with weight gain."
+    },
+    {
+      "id": "e11->e15",
+      "source": "e11",
+      "target": "e15",
+      "relation": "progresses to",
+      "weight": 0.8,
+      "rationale": "Weight gain precedes prediabetic HbA1c."
+    },
+    {
+      "id": "e8->c_metabolic",
+      "source": "e8",
+      "target": "c_metabolic",
+      "relation": "evidence for",
+      "weight": 0.75,
+      "rationale": ""
+    },
+    {
+      "id": "e7->c_metabolic",
+      "source": "e7",
+      "target": "c_metabolic",
+      "relation": "evidence for",
+      "weight": 0.7,
+      "rationale": ""
+    },
+    {
+      "id": "e11->c_metabolic",
+      "source": "e11",
+      "target": "c_metabolic",
+      "relation": "evidence for",
+      "weight": 0.7,
+      "rationale": ""
+    },
+    {
+      "id": "e9->e12",
+      "source": "e9",
+      "target": "e12",
+      "relation": "co-occurs with",
+      "weight": 0.72,
+      "rationale": "Rash and later joint pain share an autoimmune signature."
+    },
+    {
+      "id": "e12->e13",
+      "source": "e12",
+      "target": "e13",
+      "relation": "explained by",
+      "weight": 0.8,
+      "rationale": "Joint pain workup surfaced elevated ANA."
+    },
+    {
+      "id": "e13->e16",
+      "source": "e13",
+      "target": "e16",
+      "relation": "structurally precedes",
+      "weight": 0.86,
+      "rationale": "ANA positivity precedes lupus nephritis."
+    },
+    {
+      "id": "e9->c_lupus",
+      "source": "e9",
+      "target": "c_lupus",
+      "relation": "feature of",
+      "weight": 0.83,
+      "rationale": "Malar rash is a classic SLE feature."
+    },
+    {
+      "id": "e12->c_lupus",
+      "source": "e12",
+      "target": "c_lupus",
+      "relation": "feature of",
+      "weight": 0.8,
+      "rationale": "Inflammatory arthralgia is an SLE feature."
+    },
+    {
+      "id": "e13->c_lupus",
+      "source": "e13",
+      "target": "c_lupus",
+      "relation": "feature of",
+      "weight": 0.88,
+      "rationale": "ANA positivity is an SLE criterion."
+    },
+    {
+      "id": "e16->c_lupus",
+      "source": "e16",
+      "target": "c_lupus",
+      "relation": "feature of",
+      "weight": 0.9,
+      "rationale": "Nephritis is an SLE organ involvement."
+    },
+    {
+      "id": "c_lupus->e20",
+      "source": "c_lupus",
+      "target": "e20",
+      "relation": "diagnosed as",
+      "weight": 0.87,
+      "rationale": "Combined criteria -> early-onset lupus flag."
+    },
+    {
+      "id": "e17->c_cyp3a4",
+      "source": "e17",
+      "target": "c_cyp3a4",
+      "relation": "inhibits",
+      "weight": 0.92,
+      "rationale": "Clarithromycin strongly inhibits CYP3A4."
+    },
+    {
+      "id": "e18->c_cyp3a4",
+      "source": "e18",
+      "target": "c_cyp3a4",
+      "relation": "metabolized by",
+      "weight": 0.9,
+      "rationale": "Atorvastatin is cleared by CYP3A4."
+    },
+    {
+      "id": "c_cyp3a4->e18",
+      "source": "c_cyp3a4",
+      "target": "e18",
+      "relation": "accumulation of",
+      "weight": 0.85,
+      "rationale": "Inhibition raises statin concentration."
+    },
+    {
+      "id": "e19->e18",
+      "source": "e19",
+      "target": "e18",
+      "relation": "amplifies risk of",
+      "weight": 0.8,
+      "rationale": "Reduced eGFR slows clearance further."
+    },
+    {
+      "id": "e10->e7",
+      "source": "e10",
+      "target": "e7",
+      "relation": "worsens",
+      "weight": 0.6,
+      "rationale": "Anxiety nights worsen sleep."
+    },
+    {
+      "id": "e14->e10",
+      "source": "e14",
+      "target": "e10",
+      "relation": "same pattern as",
+      "weight": 0.75,
+      "rationale": "Therapy notes confirm the Sunday pattern."
+    },
+    {
+      "id": "e4->e8",
+      "source": "e4",
+      "target": "e8",
+      "relation": "may contribute to",
+      "weight": 0.45,
+      "rationale": "Beta-blockers can blunt glucose signaling."
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "nodes": [
+    {
+      "id": "n0",
+      "label": "Cognitive check 2025-12",
+      "type": "cognitive",
+      "module": "neurograph",
+      "date": "2025-12-15",
+      "detail": "Vocabulary richness 100, memory recall 100, language complexity 100.",
+      "weight": 1.0
+    },
+    {
+      "id": "n1",
+      "label": "Cognitive check 2026-01",
+      "type": "cognitive",
+      "module": "neurograph",
+      "date": "2026-01-15",
+      "detail": "Vocabulary richness 98, memory recall 96, language complexity 99.",
+      "weight": 1.0
+    },
+    {
+      "id": "n2",
+      "label": "Cognitive check 2026-02",
+      "type": "cognitive",
+      "module": "neurograph",
+      "date": "2026-02-15",
+      "detail": "Vocabulary richness 95, memory recall 92, language complexity 96.",
+      "weight": 1.0
+    },
+    {
+      "id": "n3",
+      "label": "Cognitive check 2026-03",
+      "type": "cognitive",
+      "module": "neurograph",
+      "date": "2026-03-15",
+      "detail": "Vocabulary richness 90, memory recall 86, language complexity 92.",
+      "weight": 1.0
+    },
+    {
+      "id": "n4",
+      "label": "Cognitive check 2026-04",
+      "type": "cognitive",
+      "module": "neurograph",
+      "date": "2026-04-15",
+      "detail": "Vocabulary richness 84, memory recall 79, language complexity 88.",
+      "weight": 1.0
+    },
+    {
+      "id": "n5",
+      "label": "Cognitive check 2026-05",
+      "type": "cognitive",
+      "module": "neurograph",
+      "date": "2026-05-15",
+      "detail": "Vocabulary richness 78, memory recall 71, language complexity 83.",
+      "weight": 1.0
+    },
+    {
+      "id": "n6",
+      "label": "Cognitive check 2026-06",
+      "type": "cognitive",
+      "module": "neurograph",
+      "date": "2026-06-15",
+      "detail": "Vocabulary richness 71, memory recall 64, language complexity 79.",
+      "weight": 1.0
+    },
+    {
+      "id": "ent0",
+      "label": "Margaret (wife)",
+      "type": "cognitive",
+      "module": "neurograph",
+      "date": null,
+      "detail": "Personal memory entity",
+      "weight": 1.3
+    },
+    {
+      "id": "ent1",
+      "label": "Sister Jean",
+      "type": "cognitive",
+      "module": "neurograph",
+      "date": null,
+      "detail": "Personal memory entity",
+      "weight": 1.12
+    },
+    {
+      "id": "ent2",
+      "label": "The 1979 wedding",
+      "type": "cognitive",
+      "module": "neurograph",
+      "date": null,
+      "detail": "Personal memory entity",
+      "weight": 0.94
+    },
+    {
+      "id": "ent3",
+      "label": "Lake vacations",
+      "type": "cognitive",
+      "module": "neurograph",
+      "date": null,
+      "detail": "Personal memory entity",
+      "weight": 0.76
+    },
+    {
+      "id": "ent4",
+      "label": "Grandchildren",
+      "type": "cognitive",
+      "module": "neurograph",
+      "date": null,
+      "detail": "Personal memory entity",
+      "weight": 0.58
+    }
+  ],
+  "edges": [
+    {
+      "id": "ent0->ent1",
+      "source": "ent0",
+      "target": "ent1",
+      "relation": "recalled-with",
+      "weight": 0.8,
+      "rationale": "Co-recall strength is weakening month over month."
+    },
+    {
+      "id": "ent1->ent2",
+      "source": "ent1",
+      "target": "ent2",
+      "relation": "recalled-with",
+      "weight": 0.68,
+      "rationale": "Co-recall strength is weakening month over month."
+    },
+    {
+      "id": "ent2->ent3",
+      "source": "ent2",
+      "target": "ent3",
+      "relation": "recalled-with",
+      "weight": 0.56,
+      "rationale": "Co-recall strength is weakening month over month."
+    },
+    {
+      "id": "ent3->ent4",
+      "source": "ent3",
+      "target": "ent4",
+      "relation": "recalled-with",
+      "weight": 0.44,
+      "rationale": "Co-recall strength is weakening month over month."
+    }
+  ]
+}

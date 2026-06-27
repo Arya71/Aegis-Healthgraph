@@ -1,0 +1,41 @@
+{
+  "patient_001": [
+    {
+      "id": "x1",
+      "confidence": 84,
+      "modules": [
+        "nutrisim",
+        "rxshield",
+        "pathos",
+        "curie"
+      ],
+      "title": "One pattern, four specialists, nobody connected it",
+      "body": "Elena's morning glucose spikes (NutriSim) began within days of her Metoprolol dose increase (RxShield / MedSync) and recur in weeks following her Sunday-night anxiety peaks (Pathos). Layered on top of her rash -> joint-pain -> ANA -> nephritis trajectory (Curie), the shared graph reveals a combined autoimmune + metabolic syndrome that no single specialist could see from their own records.",
+      "evidence": [
+        "e4",
+        "e8",
+        "e10",
+        "e13",
+        "e16",
+        "c_lupus",
+        "c_metabolic"
+      ]
+    },
+    {
+      "id": "x2",
+      "confidence": 71,
+      "modules": [
+        "rxshield",
+        "curie"
+      ],
+      "title": "Her kidney decline makes a routine drug risky",
+      "body": "The same reduced kidney function driving the lupus-nephritis flag also slows clearance of atorvastatin -- which Clarithromycin is now blocking via CYP3A4. The autoimmune story and the drug-safety story are the same organ failing in two graphs.",
+      "evidence": [
+        "e16",
+        "e17",
+        "e18",
+        "e19"
+      ]
+    }
+  ]
+}

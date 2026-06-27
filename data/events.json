@@ -1,0 +1,603 @@
+{
+  "patient_001": [
+    {
+      "id": "e1",
+      "date": "2021-11-04",
+      "type": "symptom",
+      "title": "Chest tightness on exertion",
+      "detail": "Reported during a brisk walk; resolved with rest.",
+      "module": "curie",
+      "severity": 2
+    },
+    {
+      "id": "e2",
+      "date": "2021-11-12",
+      "type": "visit",
+      "title": "Cardiology consult",
+      "detail": "ECG normal. Started on a beta-blocker for suspected exertional angina.",
+      "module": "medsync"
+    },
+    {
+      "id": "e3",
+      "date": "2021-11-12",
+      "type": "medication",
+      "title": "Metoprolol 25mg started",
+      "detail": "Beta-blocker. Metabolized in part via CYP2D6.",
+      "module": "rxshield"
+    },
+    {
+      "id": "e4",
+      "date": "2022-02-20",
+      "type": "medication",
+      "title": "Metoprolol increased to 50mg",
+      "detail": "Dosage increase after follow-up.",
+      "module": "rxshield"
+    },
+    {
+      "id": "e5",
+      "date": "2022-02-23",
+      "type": "symptom",
+      "title": "New persistent fatigue",
+      "detail": "Began ~3 days after the dosage increase.",
+      "module": "curie",
+      "severity": 2
+    },
+    {
+      "id": "e6",
+      "date": "2022-06-10",
+      "type": "lifestyle",
+      "title": "Late-night dinners become routine",
+      "detail": "Work stress; dinner regularly after 10pm.",
+      "module": "nutrisim"
+    },
+    {
+      "id": "e7",
+      "date": "2022-09-01",
+      "type": "metric",
+      "title": "Poor sleep (avg 5.2h, low REM)",
+      "detail": "Wearable shows fragmented sleep, REM < 45 min on bad nights.",
+      "module": "nutrisim"
+    },
+    {
+      "id": "e8",
+      "date": "2022-09-15",
+      "type": "metric",
+      "title": "Morning glucose spikes",
+      "detail": "CGM: fasting spikes to 140-160 on mornings after poor sleep.",
+      "module": "nutrisim"
+    },
+    {
+      "id": "e9",
+      "date": "2023-03-18",
+      "type": "symptom",
+      "title": "Unexplained skin rash",
+      "detail": "Malar-pattern rash across cheeks; attributed to sun.",
+      "module": "curie",
+      "severity": 2
+    },
+    {
+      "id": "e10",
+      "date": "2023-05-02",
+      "type": "mental",
+      "title": "Sunday-evening anxiety pattern",
+      "detail": "Recurring dread before Monday; tied to performance reviews.",
+      "module": "pathos"
+    },
+    {
+      "id": "e11",
+      "date": "2023-08-22",
+      "type": "metric",
+      "title": "Weight gain +6kg over 9 months",
+      "detail": "Despite no diet change.",
+      "module": "nutrisim"
+    },
+    {
+      "id": "e12",
+      "date": "2024-01-14",
+      "type": "symptom",
+      "title": "Intermittent joint pain",
+      "detail": "Wrists and knuckles, worse in the morning.",
+      "module": "curie",
+      "severity": 3
+    },
+    {
+      "id": "e13",
+      "date": "2024-04-09",
+      "type": "lab",
+      "title": "Elevated ANA titer 1:320",
+      "detail": "Ordered for fatigue workup; flagged but not followed up.",
+      "module": "curie"
+    },
+    {
+      "id": "e14",
+      "date": "2024-04-09",
+      "type": "mental",
+      "title": "Therapy: work rumination + insomnia",
+      "detail": "CBT homework started. Anxiety clusters before quarterly reviews.",
+      "module": "pathos"
+    },
+    {
+      "id": "e15",
+      "date": "2024-10-30",
+      "type": "metric",
+      "title": "HbA1c 6.1% (prediabetic)",
+      "detail": "Crossed into prediabetic range.",
+      "module": "nutrisim"
+    },
+    {
+      "id": "e16",
+      "date": "2025-05-21",
+      "type": "symptom",
+      "title": "Sudden kidney inflammation",
+      "detail": "Presented with edema + proteinuria. Trigger for full workup.",
+      "module": "curie",
+      "severity": 4
+    },
+    {
+      "id": "e17",
+      "date": "2025-05-22",
+      "type": "medication",
+      "title": "Clarithromycin started (infection)",
+      "detail": "Strong CYP3A4 inhibitor.",
+      "module": "rxshield"
+    },
+    {
+      "id": "e18",
+      "date": "2025-05-22",
+      "type": "medication",
+      "title": "On atorvastatin (prior)",
+      "detail": "Statin; cleared via CYP3A4.",
+      "module": "rxshield"
+    },
+    {
+      "id": "e19",
+      "date": "2025-05-25",
+      "type": "lab",
+      "title": "Reduced kidney function (eGFR 58)",
+      "detail": "Lowers clearance of accumulating drugs.",
+      "module": "curie"
+    },
+    {
+      "id": "e20",
+      "date": "2025-05-26",
+      "type": "diagnosis",
+      "title": "Curie flag: early-onset lupus pattern",
+      "detail": "Rash + joint pain + ANA + nephritis cluster.",
+      "module": "curie",
+      "severity": 4
+    }
+  ],
+  "patient_002": [
+    {
+      "id": "n0",
+      "date": "2025-12-15",
+      "type": "cognitive",
+      "title": "Cognitive check 2025-12",
+      "detail": "Vocabulary richness 100, memory recall 100, language complexity 100.",
+      "module": "neurograph",
+      "metrics": {
+        "vocab": 100,
+        "recall": 100,
+        "language": 100
+      }
+    },
+    {
+      "id": "n1",
+      "date": "2026-01-15",
+      "type": "cognitive",
+      "title": "Cognitive check 2026-01",
+      "detail": "Vocabulary richness 98, memory recall 96, language complexity 99.",
+      "module": "neurograph",
+      "metrics": {
+        "vocab": 98,
+        "recall": 96,
+        "language": 99
+      }
+    },
+    {
+      "id": "n2",
+      "date": "2026-02-15",
+      "type": "cognitive",
+      "title": "Cognitive check 2026-02",
+      "detail": "Vocabulary richness 95, memory recall 92, language complexity 96.",
+      "module": "neurograph",
+      "metrics": {
+        "vocab": 95,
+        "recall": 92,
+        "language": 96
+      }
+    },
+    {
+      "id": "n3",
+      "date": "2026-03-15",
+      "type": "cognitive",
+      "title": "Cognitive check 2026-03",
+      "detail": "Vocabulary richness 90, memory recall 86, language complexity 92.",
+      "module": "neurograph",
+      "metrics": {
+        "vocab": 90,
+        "recall": 86,
+        "language": 92
+      }
+    },
+    {
+      "id": "n4",
+      "date": "2026-04-15",
+      "type": "cognitive",
+      "title": "Cognitive check 2026-04",
+      "detail": "Vocabulary richness 84, memory recall 79, language complexity 88.",
+      "module": "neurograph",
+      "metrics": {
+        "vocab": 84,
+        "recall": 79,
+        "language": 88
+      }
+    },
+    {
+      "id": "n5",
+      "date": "2026-05-15",
+      "type": "cognitive",
+      "title": "Cognitive check 2026-05",
+      "detail": "Vocabulary richness 78, memory recall 71, language complexity 83.",
+      "module": "neurograph",
+      "metrics": {
+        "vocab": 78,
+        "recall": 71,
+        "language": 83
+      }
+    },
+    {
+      "id": "n6",
+      "date": "2026-06-15",
+      "type": "cognitive",
+      "title": "Cognitive check 2026-06",
+      "detail": "Vocabulary richness 71, memory recall 64, language complexity 79.",
+      "module": "neurograph",
+      "metrics": {
+        "vocab": 71,
+        "recall": 64,
+        "language": 79
+      }
+    }
+  ],
+  "patient_003": [
+    {
+      "id": "patient_003_e1",
+      "date": "2024-02-10",
+      "type": "visit",
+      "title": "Primary care visit",
+      "detail": "Routine review of type 2 diabetes, hypertension.",
+      "module": "medsync"
+    },
+    {
+      "id": "patient_003_e2",
+      "date": "2024-07-19",
+      "type": "lab",
+      "title": "Routine labs",
+      "detail": "Mostly within range; one borderline marker.",
+      "module": "curie"
+    },
+    {
+      "id": "patient_003_e3",
+      "date": "2025-01-08",
+      "type": "medication",
+      "title": "Maintenance medication",
+      "detail": "Ongoing therapy.",
+      "module": "rxshield"
+    },
+    {
+      "id": "patient_003_e4",
+      "date": "2025-09-22",
+      "type": "lifestyle",
+      "title": "Lifestyle log",
+      "detail": "Sleep and activity tracked via wearable.",
+      "module": "nutrisim"
+    }
+  ],
+  "patient_004": [
+    {
+      "id": "patient_004_e1",
+      "date": "2024-02-10",
+      "type": "visit",
+      "title": "Primary care visit",
+      "detail": "Routine review of migraine, anxiety.",
+      "module": "medsync"
+    },
+    {
+      "id": "patient_004_e2",
+      "date": "2024-07-19",
+      "type": "lab",
+      "title": "Routine labs",
+      "detail": "Mostly within range; one borderline marker.",
+      "module": "curie"
+    },
+    {
+      "id": "patient_004_e3",
+      "date": "2025-01-08",
+      "type": "medication",
+      "title": "Maintenance medication",
+      "detail": "Ongoing therapy.",
+      "module": "rxshield"
+    },
+    {
+      "id": "patient_004_e4",
+      "date": "2025-09-22",
+      "type": "lifestyle",
+      "title": "Lifestyle log",
+      "detail": "Sleep and activity tracked via wearable.",
+      "module": "nutrisim"
+    }
+  ],
+  "patient_005": [
+    {
+      "id": "patient_005_e1",
+      "date": "2024-02-10",
+      "type": "visit",
+      "title": "Primary care visit",
+      "detail": "Routine review of atrial fibrillation, polypharmacy.",
+      "module": "medsync"
+    },
+    {
+      "id": "patient_005_e2",
+      "date": "2024-07-19",
+      "type": "lab",
+      "title": "Routine labs",
+      "detail": "Mostly within range; one borderline marker.",
+      "module": "curie"
+    },
+    {
+      "id": "patient_005_e3",
+      "date": "2025-01-08",
+      "type": "medication",
+      "title": "Maintenance medication",
+      "detail": "Ongoing therapy.",
+      "module": "rxshield"
+    },
+    {
+      "id": "patient_005_e4",
+      "date": "2025-09-22",
+      "type": "lifestyle",
+      "title": "Lifestyle log",
+      "detail": "Sleep and activity tracked via wearable.",
+      "module": "nutrisim"
+    }
+  ],
+  "patient_006": [
+    {
+      "id": "patient_006_e1",
+      "date": "2024-02-10",
+      "type": "visit",
+      "title": "Primary care visit",
+      "detail": "Routine review of hypothyroidism, vitamin d deficiency.",
+      "module": "medsync"
+    },
+    {
+      "id": "patient_006_e2",
+      "date": "2024-07-19",
+      "type": "lab",
+      "title": "Routine labs",
+      "detail": "Mostly within range; one borderline marker.",
+      "module": "curie"
+    },
+    {
+      "id": "patient_006_e3",
+      "date": "2025-01-08",
+      "type": "medication",
+      "title": "Maintenance medication",
+      "detail": "Ongoing therapy.",
+      "module": "rxshield"
+    },
+    {
+      "id": "patient_006_e4",
+      "date": "2025-09-22",
+      "type": "lifestyle",
+      "title": "Lifestyle log",
+      "detail": "Sleep and activity tracked via wearable.",
+      "module": "nutrisim"
+    }
+  ],
+  "patient_007": [
+    {
+      "id": "patient_007_e1",
+      "date": "2024-02-10",
+      "type": "visit",
+      "title": "Primary care visit",
+      "detail": "Routine review of asthma, seasonal allergies.",
+      "module": "medsync"
+    },
+    {
+      "id": "patient_007_e2",
+      "date": "2024-07-19",
+      "type": "lab",
+      "title": "Routine labs",
+      "detail": "Mostly within range; one borderline marker.",
+      "module": "curie"
+    },
+    {
+      "id": "patient_007_e3",
+      "date": "2025-01-08",
+      "type": "medication",
+      "title": "Maintenance medication",
+      "detail": "Ongoing therapy.",
+      "module": "rxshield"
+    },
+    {
+      "id": "patient_007_e4",
+      "date": "2025-09-22",
+      "type": "lifestyle",
+      "title": "Lifestyle log",
+      "detail": "Sleep and activity tracked via wearable.",
+      "module": "nutrisim"
+    }
+  ],
+  "patient_008": [
+    {
+      "id": "patient_008_e1",
+      "date": "2024-02-10",
+      "type": "visit",
+      "title": "Primary care visit",
+      "detail": "Routine review of rheumatoid arthritis.",
+      "module": "medsync"
+    },
+    {
+      "id": "patient_008_e2",
+      "date": "2024-07-19",
+      "type": "lab",
+      "title": "Routine labs",
+      "detail": "Mostly within range; one borderline marker.",
+      "module": "curie"
+    },
+    {
+      "id": "patient_008_e3",
+      "date": "2025-01-08",
+      "type": "medication",
+      "title": "Maintenance medication",
+      "detail": "Ongoing therapy.",
+      "module": "rxshield"
+    },
+    {
+      "id": "patient_008_e4",
+      "date": "2025-09-22",
+      "type": "lifestyle",
+      "title": "Lifestyle log",
+      "detail": "Sleep and activity tracked via wearable.",
+      "module": "nutrisim"
+    }
+  ],
+  "patient_009": [
+    {
+      "id": "patient_009_e1",
+      "date": "2024-02-10",
+      "type": "visit",
+      "title": "Primary care visit",
+      "detail": "Routine review of gerd, high cholesterol.",
+      "module": "medsync"
+    },
+    {
+      "id": "patient_009_e2",
+      "date": "2024-07-19",
+      "type": "lab",
+      "title": "Routine labs",
+      "detail": "Mostly within range; one borderline marker.",
+      "module": "curie"
+    },
+    {
+      "id": "patient_009_e3",
+      "date": "2025-01-08",
+      "type": "medication",
+      "title": "Maintenance medication",
+      "detail": "Ongoing therapy.",
+      "module": "rxshield"
+    },
+    {
+      "id": "patient_009_e4",
+      "date": "2025-09-22",
+      "type": "lifestyle",
+      "title": "Lifestyle log",
+      "detail": "Sleep and activity tracked via wearable.",
+      "module": "nutrisim"
+    }
+  ],
+  "patient_010": [
+    {
+      "id": "patient_010_e1",
+      "date": "2024-02-10",
+      "type": "visit",
+      "title": "Primary care visit",
+      "detail": "Routine review of pcos, insulin resistance.",
+      "module": "medsync"
+    },
+    {
+      "id": "patient_010_e2",
+      "date": "2024-07-19",
+      "type": "lab",
+      "title": "Routine labs",
+      "detail": "Mostly within range; one borderline marker.",
+      "module": "curie"
+    },
+    {
+      "id": "patient_010_e3",
+      "date": "2025-01-08",
+      "type": "medication",
+      "title": "Maintenance medication",
+      "detail": "Ongoing therapy.",
+      "module": "rxshield"
+    },
+    {
+      "id": "patient_010_e4",
+      "date": "2025-09-22",
+      "type": "lifestyle",
+      "title": "Lifestyle log",
+      "detail": "Sleep and activity tracked via wearable.",
+      "module": "nutrisim"
+    }
+  ],
+  "patient_011": [
+    {
+      "id": "patient_011_e1",
+      "date": "2024-02-10",
+      "type": "visit",
+      "title": "Primary care visit",
+      "detail": "Routine review of osteoporosis, mild cognitive complaints.",
+      "module": "medsync"
+    },
+    {
+      "id": "patient_011_e2",
+      "date": "2024-07-19",
+      "type": "lab",
+      "title": "Routine labs",
+      "detail": "Mostly within range; one borderline marker.",
+      "module": "curie"
+    },
+    {
+      "id": "patient_011_e3",
+      "date": "2025-01-08",
+      "type": "medication",
+      "title": "Maintenance medication",
+      "detail": "Ongoing therapy.",
+      "module": "rxshield"
+    },
+    {
+      "id": "patient_011_e4",
+      "date": "2025-09-22",
+      "type": "lifestyle",
+      "title": "Lifestyle log",
+      "detail": "Sleep and activity tracked via wearable.",
+      "module": "nutrisim"
+    }
+  ],
+  "patient_012": [
+    {
+      "id": "patient_012_e1",
+      "date": "2024-02-10",
+      "type": "visit",
+      "title": "Primary care visit",
+      "detail": "Routine review of chronic kidney disease stage 2.",
+      "module": "medsync"
+    },
+    {
+      "id": "patient_012_e2",
+      "date": "2024-07-19",
+      "type": "lab",
+      "title": "Routine labs",
+      "detail": "Mostly within range; one borderline marker.",
+      "module": "curie"
+    },
+    {
+      "id": "patient_012_e3",
+      "date": "2025-01-08",
+      "type": "medication",
+      "title": "Maintenance medication",
+      "detail": "Ongoing therapy.",
+      "module": "rxshield"
+    },
+    {
+      "id": "patient_012_e4",
+      "date": "2025-09-22",
+      "type": "lifestyle",
+      "title": "Lifestyle log",
+      "detail": "Sleep and activity tracked via wearable.",
+      "module": "nutrisim"
+    }
+  ]
+}

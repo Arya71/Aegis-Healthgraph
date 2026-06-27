@@ -1,0 +1,168 @@
+[
+  {
+    "id": "patient_001",
+    "name": "Elena Voss",
+    "age": 47,
+    "sex": "F",
+    "conditions": [
+      "Suspected lupus",
+      "Prediabetes",
+      "Anxiety"
+    ],
+    "story": "A 4-year autoimmune + metabolic story hidden across six specialists.",
+    "hero": true,
+    "eventCount": 20,
+    "hue": 56
+  },
+  {
+    "id": "patient_002",
+    "name": "Arthur Reyes",
+    "age": 72,
+    "sex": "M",
+    "conditions": [
+      "Mild cognitive impairment"
+    ],
+    "story": "Cognitive decline tracked as the patient's own knowledge graph thins.",
+    "hero": true,
+    "eventCount": 7,
+    "hue": 249
+  },
+  {
+    "id": "patient_003",
+    "name": "Marcus Bell",
+    "age": 58,
+    "sex": "M",
+    "conditions": [
+      "Type 2 diabetes",
+      "hypertension"
+    ],
+    "story": "Routine record: type 2 diabetes, hypertension.",
+    "hero": false,
+    "eventCount": 4,
+    "hue": 176
+  },
+  {
+    "id": "patient_004",
+    "name": "Priya Nair",
+    "age": 34,
+    "sex": "F",
+    "conditions": [
+      "Migraine",
+      "anxiety"
+    ],
+    "story": "Routine record: migraine, anxiety.",
+    "hero": false,
+    "eventCount": 4,
+    "hue": 251
+  },
+  {
+    "id": "patient_005",
+    "name": "Liam O'Connor",
+    "age": 63,
+    "sex": "M",
+    "conditions": [
+      "Atrial fibrillation",
+      "polypharmacy"
+    ],
+    "story": "Routine record: atrial fibrillation, polypharmacy.",
+    "hero": false,
+    "eventCount": 4,
+    "hue": 95
+  },
+  {
+    "id": "patient_006",
+    "name": "Sofia Ramos",
+    "age": 41,
+    "sex": "F",
+    "conditions": [
+      "Hypothyroidism",
+      "vitamin D deficiency"
+    ],
+    "story": "Routine record: hypothyroidism, vitamin d deficiency.",
+    "hero": false,
+    "eventCount": 4,
+    "hue": 229
+  },
+  {
+    "id": "patient_007",
+    "name": "Daniel Kim",
+    "age": 29,
+    "sex": "M",
+    "conditions": [
+      "Asthma",
+      "seasonal allergies"
+    ],
+    "story": "Routine record: asthma, seasonal allergies.",
+    "hero": false,
+    "eventCount": 4,
+    "hue": 289
+  },
+  {
+    "id": "patient_008",
+    "name": "Amara Okafor",
+    "age": 52,
+    "sex": "F",
+    "conditions": [
+      "Rheumatoid arthritis"
+    ],
+    "story": "Routine record: rheumatoid arthritis.",
+    "hero": false,
+    "eventCount": 4,
+    "hue": 126
+  },
+  {
+    "id": "patient_009",
+    "name": "Noah Schmidt",
+    "age": 47,
+    "sex": "M",
+    "conditions": [
+      "GERD",
+      "high cholesterol"
+    ],
+    "story": "Routine record: gerd, high cholesterol.",
+    "hero": false,
+    "eventCount": 4,
+    "hue": 357
+  },
+  {
+    "id": "patient_010",
+    "name": "Yuki Tanaka",
+    "age": 38,
+    "sex": "F",
+    "conditions": [
+      "PCOS",
+      "insulin resistance"
+    ],
+    "story": "Routine record: pcos, insulin resistance.",
+    "hero": false,
+    "eventCount": 4,
+    "hue": 189
+  },
+  {
+    "id": "patient_011",
+    "name": "Grace Bennett",
+    "age": 67,
+    "sex": "F",
+    "conditions": [
+      "Osteoporosis",
+      "mild cognitive complaints"
+    ],
+    "story": "Routine record: osteoporosis, mild cognitive complaints.",
+    "hero": false,
+    "eventCount": 4,
+    "hue": 69
+  },
+  {
+    "id": "patient_012",
+    "name": "Omar Haddad",
+    "age": 55,
+    "sex": "M",
+    "conditions": [
+      "Chronic kidney disease stage 2"
+    ],
+    "story": "Routine record: chronic kidney disease stage 2.",
+    "hero": false,
+    "eventCount": 4,
+    "hue": 88
+  }
+]

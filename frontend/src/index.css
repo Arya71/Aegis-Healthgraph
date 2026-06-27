@@ -1,0 +1,161 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===========================================================================
+   Theme tokens. `.dark` (default) and `.light` are toggled on <html>.
+   Colors are RGB triplets so Tailwind alpha utilities (text-fg/55) work.
+   =========================================================================== */
+.dark {
+  --bg: 5 7 15;
+  --fg: 232 236 248;
+  --line: 255 255 255;
+  --surface: 255 255 255;
+  --field: 2 6 16;
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-hover-bg: rgba(255, 255, 255, 0.07);
+  --glass-hover-border: rgba(255, 255, 255, 0.2);
+  --card-shadow: 0 8px 40px -12px rgba(0, 0, 0, 0.6);
+  --dot: rgba(255, 255, 255, 0.045);
+  --grad: linear-gradient(90deg, #9ec3ff, #b3a8ff, #ff9ecb);
+  color-scheme: dark;
+}
+.light {
+  --bg: 244 247 252;
+  --fg: 17 24 39;
+  --line: 15 23 42;
+  --surface: 15 23 42;
+  --field: 226 232 240;
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(15, 23, 42, 0.08);
+  --glass-hover-bg: rgba(255, 255, 255, 0.95);
+  --glass-hover-border: rgba(15, 23, 42, 0.16);
+  --card-shadow: 0 12px 34px -16px rgba(15, 23, 42, 0.28);
+  --dot: rgba(15, 23, 42, 0.06);
+  --grad: linear-gradient(90deg, #3b5bdb, #6741d9, #c2255c);
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, sans-serif;
+  color: rgb(var(--fg));
+  background: rgb(var(--bg));
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  transition: background 0.4s ease, color 0.3s ease;
+}
+
+/* Ambient animated healthcare gradient backdrop */
+.app-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(60% 60% at 15% 10%, rgba(110, 168, 255, 0.18), transparent 60%),
+    radial-gradient(55% 55% at 85% 15%, rgba(124, 108, 255, 0.2), transparent 60%),
+    radial-gradient(60% 60% at 75% 90%, rgba(255, 126, 182, 0.12), transparent 60%),
+    radial-gradient(50% 50% at 20% 85%, rgba(55, 214, 179, 0.1), transparent 60%),
+    rgb(var(--bg));
+}
+.app-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+}
+
+@layer components {
+  .glass {
+    @apply rounded-2xl backdrop-blur-xl;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--card-shadow);
+  }
+  .glass-hover {
+    @apply transition-all duration-300;
+  }
+  .glass-hover:hover {
+    background: var(--glass-hover-bg);
+    border-color: var(--glass-hover-border);
+    box-shadow: 0 0 40px -8px rgba(124, 108, 255, 0.45);
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium;
+    color: rgb(var(--fg) / 0.7);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+  }
+  .gradient-text {
+    background: var(--grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200;
+  }
+  .btn-primary {
+    @apply btn bg-gradient-to-r from-[#5b7cff] to-[#8b6cff] text-white shadow-glow active:scale-[0.98];
+  }
+  .btn-primary:hover {
+    filter: brightness(1.1);
+  }
+  .btn-ghost {
+    @apply btn;
+    color: rgb(var(--fg) / 0.85);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+  }
+  .btn-ghost:hover {
+    background: var(--glass-hover-bg);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--fg) / 0.18);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--fg) / 0.28);
+}
+
+/* React Flow theming */
+.react-flow__edge-path {
+  stroke-width: 1.6;
+}
+.react-flow__attribution {
+  display: none;
+}
+.react-flow__controls button {
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  color: rgb(var(--fg)) !important;
+}
+
+.typing-caret::after {
+  content: "▍";
+  margin-left: 1px;
+  animation: blink 1s steps(1) infinite;
+  color: #9ec3ff;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}

@@ -1,0 +1,11 @@
+# Core backend -- runs on Python 3.9+
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+pydantic==2.7.4
+httpx==0.27.0          # REST client for Cognee Cloud / self-hosted Cognee
+
+# --- Live Cognee mode (optional) -------------------------------------------
+# Cognee needs Python >=3.10,<3.13. Install it in its own environment:
+#   uv venv --python 3.11 && uv pip install cognee
+# then set AEGIS_MEMORY_MODE=live in .env. See README "Live mode".
+# cognee>=0.1.40
