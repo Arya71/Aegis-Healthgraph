@@ -7,6 +7,7 @@ interface Ctx {
   selectedId: string;
   selected?: Patient;
   setSelectedId: (id: string) => void;
+  reload: () => Promise<void>;
   memoryMode: string;
   loading: boolean;
 }
@@ -36,9 +37,10 @@ export function PatientProvider({ children }: { children: ReactNode }) {
   }, [selectedId]);
 
   const selected = patients.find((p) => p.id === selectedId);
+  const reload = () => api.patients().then(setPatients).then(() => undefined);
 
   return (
-    <PatientCtx.Provider value={{ patients, selectedId, selected, setSelectedId, memoryMode, loading }}>
+    <PatientCtx.Provider value={{ patients, selectedId, selected, setSelectedId, reload, memoryMode, loading }}>
       {children}
     </PatientCtx.Provider>
   );

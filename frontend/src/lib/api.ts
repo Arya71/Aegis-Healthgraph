@@ -23,6 +23,8 @@ async function post<T>(path: string, body: unknown): Promise<T> {
 export const api = {
   health: () => get<{ status: string; memoryMode: string; patients: number }>("/health"),
   patients: () => get<Patient[]>("/patients"),
+  createPatient: (p: { name: string; age: number; sex: string; conditions: string[]; story?: string }) =>
+    post<Patient>("/patients", p),
   patient: (id: string) => get<PatientDetail>(`/patients/${id}`),
   graph: (id: string, until?: string) =>
     get<Graph>(`/patients/${id}/graph${until ? `?until=${until}` : ""}`),
@@ -30,10 +32,10 @@ export const api = {
   insights: (id: string) =>
     get<{ modules: Insight[]; cross: CrossInsight[] }>(`/patients/${id}/insights`),
   module: <T = any>(id: string, mod: ModuleKey) => get<T>(`/patients/${id}/modules/${mod}`),
-  recall: (id: string, query: string) =>
-    post<RecallResult>(`/patients/${id}/recall`, { query }),
-  remember: (id: string, text: string, type = "symptom") =>
-    post<RememberResult>(`/patients/${id}/remember`, { text, type }),
+  recall: (id: string, query: string, sessionId?: string) =>
+    post<RecallResult>(`/patients/${id}/recall`, sessionId ? { query, session_id: sessionId } : { query }),
+  remember: (id: string, text: string, type = "symptom", sessionId?: string) =>
+    post<RememberResult>(`/patients/${id}/remember`, sessionId ? { text, type, session_id: sessionId } : { text, type }),
   improve: (id: string) =>
     post<{ ok: boolean; source: string; message: string }>(`/patients/${id}/improve`, {}),
   forget: (id: string) =>

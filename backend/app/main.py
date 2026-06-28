@@ -32,6 +32,14 @@ class RememberRequest(BaseModel):
     type: str = "symptom"
 
 
+class NewPatientRequest(BaseModel):
+    name: str
+    age: int = 50
+    sex: str = "F"
+    conditions: List[str] = []
+    story: str = ""
+
+
 @app.get("/api/health")
 def health():
     return {"status": "ok", "memoryMode": MEMORY.mode,
@@ -41,6 +49,14 @@ def health():
 @app.get("/api/patients")
 def list_patients():
     return data_store.patients()
+
+
+@app.post("/api/patients")
+def create_patient(req: NewPatientRequest):
+    if not req.name.strip():
+        raise HTTPException(400, "name is required")
+    return data_store.add_patient(req.name.strip(), req.age, req.sex,
+                                  [c.strip() for c in req.conditions if c.strip()], req.story.strip())
 
 
 @app.get("/api/patients/{pid}")

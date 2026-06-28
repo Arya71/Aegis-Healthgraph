@@ -1,18 +1,27 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { usePatients } from "../lib/PatientContext";
 import { Pill, Spinner } from "../components/ui";
 import ThemeToggle from "../components/ThemeToggle";
+import AddPatientModal from "../components/AddPatientModal";
 
 export default function PatientSelect() {
-  const { patients, setSelectedId, loading } = usePatients();
+  const { patients, setSelectedId, reload, loading } = usePatients();
   const navigate = useNavigate();
+  const [adding, setAdding] = useState(false);
 
   if (loading) return <Spinner />;
 
   function open(id: string) {
     setSelectedId(id);
     navigate("/dashboard");
+  }
+
+  async function onCreated(id: string) {
+    await reload();
+    setAdding(false);
+    open(id);
   }
 
   return (
@@ -22,7 +31,10 @@ export default function PatientSelect() {
           <div className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-fg/40">Patient registry</div>
           <h1 className="text-3xl font-extrabold">Choose a Digital Cognitive Twin</h1>
         </div>
-        <ThemeToggle />
+        <div className="flex items-center gap-2">
+          <button className="btn-primary" onClick={() => setAdding(true)}>+ New patient</button>
+          <ThemeToggle />
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -53,7 +65,18 @@ export default function PatientSelect() {
             </div>
           </motion.button>
         ))}
+
+        <motion.button
+          initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: patients.length * 0.04 }}
+          onClick={() => setAdding(true)}
+          className="flex min-h-[150px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-line/20 text-fg/45 transition hover:border-[#7c6cff]/50 hover:text-fg/80"
+        >
+          <span className="text-3xl">＋</span>
+          <span className="text-sm font-semibold">Add new patient</span>
+        </motion.button>
       </div>
+
+      <AddPatientModal open={adding} onClose={() => setAdding(false)} onCreated={onCreated} />
     </div>
   );
 }
