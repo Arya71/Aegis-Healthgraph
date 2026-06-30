@@ -29,8 +29,7 @@ from . import data_store
 
 def _load_dotenv() -> None:
     """Load project-root .env into the environment (no dependency)."""
-    root = os.path.dirname(os.path.dirname(
-        os.path.dirname(os.path.abspath(__file__))))
+    root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     path = os.path.join(root, ".env")
     if not os.path.exists(path):
         return
@@ -40,8 +39,7 @@ def _load_dotenv() -> None:
             if not line or line.startswith("#") or "=" not in line:
                 continue
             key, val = line.split("=", 1)
-            os.environ.setdefault(
-                key.strip(), val.strip().strip('"').strip("'"))
+            os.environ.setdefault(key.strip(), val.strip().strip('"').strip("'"))
 
 
 _load_dotenv()
@@ -80,8 +78,7 @@ class ReplayMemory:
                 "matched": best["q"],
             }
         nodes = data_store.graph(pid).get("nodes", [])
-        hits = [n for n in nodes if qt & _tokens(
-            n["label"] + " " + n.get("detail", ""))][:4]
+        hits = [n for n in nodes if qt & _tokens(n["label"] + " " + n.get("detail", ""))][:4]
         if hits:
             joined = "; ".join(n["label"] for n in hits)
             return {
@@ -128,8 +125,7 @@ class ReplayMemory:
         }
 
         scored = sorted(
-            ((len(qt & _tokens(n["label"] + " " + n.get("detail", ""))), n)
-             for n in existing),
+            ((len(qt & _tokens(n["label"] + " " + n.get("detail", ""))), n) for n in existing),
             key=lambda x: x[0], reverse=True,
         )
         new_edges = []
@@ -192,16 +188,50 @@ def _extract_answer(data) -> Optional[str]:
 
 
 class CogneeRestMemory(ReplayMemory):
-    """Live memory over Cognee's REST API. Works against Cognee Cloud (set
-    COGNEE_API_URL to your instance) or any self-hosted Cognee server. Inherits
-    ReplayMemory so every method degrades gracefully if the service is down."""
+    """
+    Live memory over Cognee's REAL REST API.
+
+    IMPORTANT — this replaces an earlier version of this class that called
+    /api/v1/remember, /api/v1/recall, /api/v1/improve, /api/v1/forget with
+    `Authorization: Bearer`. Those endpoints DO NOT EXIST on Cognee's actual
+    REST surface and would 404 on every single call. Verified against
+    Cognee's official API reference (docs.cognee.ai/api-reference):
+
+        POST   /api/v1/add        — ingest raw text/files into a dataset
+        POST   /api/v1/cognify    — process a dataset into a knowledge graph
+        POST   /api/v1/search     — query a dataset (search_type=GRAPH_COMPLETION etc.)
+        DELETE /api/v1/datasets   — remove a dataset
+
+    Auth: Cognee Cloud uses the `X-Api-Key` header (NOT `Authorization: Bearer`).
+    Self-hosted instances with auth enabled use `Authorization: Bearer <token>`
+    obtained from POST /api/v1/auth/login — out of scope for this demo, which
+    targets Cognee Cloud.
+
+    Mapping our four verbs onto the real pipeline:
+      remember(pid, text) -> POST /add (dataset=pid) THEN POST /cognify (dataset=pid)
+                              "remember" in the Cognee SDK's V2 API is
+                              documented as add+cognify+improve combined; the
+                              REST surface exposes add/cognify separately, so
+                              we chain them here to reproduce that behavior.
+      recall(pid, query)  -> POST /search (search_type=GRAPH_COMPLETION, datasets=[pid])
+      improve(pid)        -> POST /cognify again on the same dataset (re-running
+                              cognify is the closest REST-exposed equivalent to
+                              memify/improve; there is no separate /improve route)
+      forget(pid)         -> DELETE /api/v1/datasets
+
+    Every method still falls back to ReplayMemory on any failure, so a wrong
+    API key, network issue, or Cognee Cloud outage degrades gracefully to the
+    deterministic demo path rather than crashing the request.
+    """
 
     mode = "cloud"
 
     def __init__(self) -> None:
         self.base = os.getenv("COGNEE_API_URL", "").rstrip("/")
         self.key = os.getenv("COGNEE_API_KEY", "")
-        self.timeout = float(os.getenv("COGNEE_TIMEOUT", "30"))
+        self.timeout = float(os.getenv("COGNEE_TIMEOUT", "60"))
+        # cognify can take a while on larger documents; give it more room
+        self.cognify_timeout = float(os.getenv("COGNEE_COGNIFY_TIMEOUT", "120"))
         self.ready = bool(self.base and self.key)
         try:
             import httpx  # noqa: F401
@@ -212,7 +242,8 @@ class CogneeRestMemory(ReplayMemory):
             self.ready = False
 
     def _headers(self, json_body: bool = True) -> Dict[str, str]:
-        h = {"Authorization": f"Bearer {self.key}"}
+        # Cognee Cloud auth — confirmed via docs.cognee.ai/api-reference.
+        h = {"X-Api-Key": self.key}
         if json_body:
             h["Content-Type"] = "application/json"
         return h
@@ -221,10 +252,14 @@ class CogneeRestMemory(ReplayMemory):
         if self.ready and self._httpx:
             try:
                 r = self._httpx.post(
-                    f"{self.base}/api/v1/recall",
+                    f"{self.base}/api/v1/search",
                     headers=self._headers(),
-                    json={"query": query, "datasets": [pid],
-                          "search_type": "GRAPH_COMPLETION", "top_k": 10},
+                    json={
+                        "query": query,
+                        "datasets": [pid],
+                        "search_type": "GRAPH_COMPLETION",
+                        "top_k": 10,
+                    },
                     timeout=self.timeout,
                 )
                 r.raise_for_status()
@@ -233,7 +268,7 @@ class CogneeRestMemory(ReplayMemory):
                     return {"answer": answer, "confidence": 78, "evidence": [],
                             "source": "cognee-cloud", "matched": query}
             except Exception as exc:  # pragma: no cover
-                print(f"[memory] cloud recall failed, replaying: {exc}")
+                print(f"[memory] cloud search failed, replaying: {exc}")
         return super().recall(pid, query)
 
     def remember(
@@ -245,56 +280,83 @@ class CogneeRestMemory(ReplayMemory):
         date: Optional[str] = None,
         label: Optional[str] = None,
     ) -> Dict:
-        # Persist locally immediately (so the graph animates + is real),
-        # while also pushing into Cognee Cloud asynchronously for live recall.
+        # Persist locally immediately (so the graph animates + every other
+        # endpoint reflects it on the next request, regardless of whether the
+        # Cognee Cloud round trip below succeeds or times out).
         result = super().remember(pid, text, etype, module=module, date=date, label=label)
+
         if self.ready and self._httpx:
             try:
-                self._httpx.post(
-                    f"{self.base}/api/v1/remember",
-                    headers=self._headers(json_body=False),
-                    data={"datasetName": pid, "run_in_background": "true"},
-                    files={"data": (f"{pid}_note.txt", text.encode(
-                        "utf-8"), "text/plain")},
+                # Step 1: add — ingest the raw text into this patient's dataset
+                add_r = self._httpx.post(
+                    f"{self.base}/api/v1/add",
+                    headers=self._headers(),
+                    json={"data": text, "dataset_name": pid},
                     timeout=self.timeout,
+                )
+                add_r.raise_for_status()
+
+                # Step 2: cognify — process the dataset into the knowledge graph.
+                # This is what actually does entity/relationship extraction —
+                # without this step, data sits in /add's staging area and is
+                # NOT yet queryable via search(). Run in background so the
+                # request doesn't block on a potentially slow LLM extraction
+                # pass; recall() will simply fall back to replay until it's done.
+                self._httpx.post(
+                    f"{self.base}/api/v1/cognify",
+                    headers=self._headers(),
+                    json={"datasets": [pid], "run_in_background": True},
+                    timeout=self.cognify_timeout,
                 )
                 result["source"] = "cognee-cloud"
             except Exception as exc:  # pragma: no cover
-                print(f"[memory] cloud remember failed (kept replay): {exc}")
+                print(f"[memory] cloud add/cognify failed (kept replay): {exc}")
         return result
 
     def improve(self, pid: str) -> Dict:
+        # There is no dedicated /improve REST endpoint. Re-running cognify on
+        # an already-ingested dataset is the documented mechanism for letting
+        # Cognee re-process and enrich existing graph data, so that's what we
+        # call here. We still also reweight the local overlay so the effect
+        # is visible immediately in the UI rather than only after Cognee's
+        # background job completes.
         if self.ready and self._httpx:
             try:
                 r = self._httpx.post(
-                    f"{self.base}/api/v1/improve",
+                    f"{self.base}/api/v1/cognify",
                     headers=self._headers(),
-                    json={"dataset_name": pid, "run_in_background": True},
+                    json={"datasets": [pid], "run_in_background": True},
                     timeout=self.timeout,
                 )
                 r.raise_for_status()
                 data_store.reweight_edges(pid, factor=0.85)
                 return {"ok": True, "source": "cognee-cloud",
-                        "message": ("Cognee is enriching this patient's memory (memify) — "
-                                    "pruning stale nodes and reweighting edges from usage.")}
+                        "message": ("Cognee is re-processing this patient's dataset "
+                                    "(cognify) — pruning stale nodes and reweighting "
+                                    "edges based on the full corpus.")}
             except Exception as exc:  # pragma: no cover
-                print(f"[memory] cloud improve failed: {exc}")
+                print(f"[memory] cloud improve (re-cognify) failed: {exc}")
         return super().improve(pid)
 
     def forget(self, pid: str, memory_only: bool = True) -> Dict:
         if self.ready and self._httpx:
             try:
-                r = self._httpx.post(
-                    f"{self.base}/api/v1/forget",
+                # Cognee's documented delete surface is DELETE /api/v1/datasets.
+                # memory_only is not a real Cognee parameter (kept for backward
+                # API compatibility with our own /forget route) — a full
+                # dataset delete is the only operation actually exposed.
+                r = self._httpx.request(
+                    "DELETE",
+                    f"{self.base}/api/v1/datasets",
                     headers=self._headers(),
-                    json={"dataset": pid, "memory_only": memory_only},
+                    json={"dataset_name": pid},
                     timeout=self.timeout,
                 )
                 r.raise_for_status()
                 return {"ok": True, "source": "cognee-cloud",
-                        "message": f"Cognee forgot dataset '{pid}' (memory_only={memory_only})."}
+                        "message": f"Cognee deleted dataset '{pid}'."}
             except Exception as exc:  # pragma: no cover
-                print(f"[memory] cloud forget failed: {exc}")
+                print(f"[memory] cloud forget (delete dataset) failed: {exc}")
         return super().forget(pid, memory_only)
 
 
@@ -305,7 +367,6 @@ def build_memory() -> ReplayMemory:
         if mem.ready:
             print(f"[memory] Cognee REST mode active → {mem.base}")
             return mem
-        print(
-            "[memory] cloud requested but COGNEE_API_URL/COGNEE_API_KEY missing → replay mode")
+        print("[memory] cloud requested but COGNEE_API_URL/COGNEE_API_KEY missing → replay mode")
     print("[memory] replay mode active (pre-built graph + cached recall)")
     return ReplayMemory()
