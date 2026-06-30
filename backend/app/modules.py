@@ -44,11 +44,22 @@ def _curie(pid: str) -> Dict:
     ev = [e for e in data_store.events().get(pid, [])
           if e["type"] in ("symptom", "diagnosis", "lab")]
     ins = [i for i in data_store.insights().get(pid, []) if i["module"] == "curie"]
-    return {"symptomTimeline": sorted(ev, key=lambda e: e["date"]), "insights": ins}
+    # NOTE: sort key changed from `e["date"]` to `e.get("date") or ""`.
+    # Why: remember() now persists events into data_store (previously it was
+    # a no-op for module pages). Several existing call sites — the
+    # GraphExplorer "Remember" box, RxShield's prescription sandbox, Pathos's
+    # journal, NeuroGraph's transcript ingestion — call remember() WITHOUT a
+    # date, so persisted events can have date=None. Sorting raw None against
+    # str date strings raises TypeError in Python 3 and would 500 this
+    # endpoint the first time any of those features were used, regardless of
+    # whether OmniGest is involved. `e.get("date") or ""` sorts dateless
+    # events first/last consistently with no crash.
+    return {"symptomTimeline": sorted(ev, key=lambda e: e.get("date") or ""), "insights": ins}
 
 
 def _medsync(pid: str) -> Dict:
-    ev = sorted(data_store.events().get(pid, []), key=lambda e: e["date"])
+    # Same fix as _curie() above — see that comment for the full rationale.
+    ev = sorted(data_store.events().get(pid, []), key=lambda e: e.get("date") or "")
     edges = [e for e in data_store.graph(pid)["edges"]
              if e["relation"] in ("temporally precedes", "led to consult", "drives",
                                    "progresses to", "contributes to", "structurally precedes")]

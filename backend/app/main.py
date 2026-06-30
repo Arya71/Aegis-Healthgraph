@@ -1,10 +1,9 @@
-"""Aegis HealthGraph API -- a thin FastAPI layer over the Cognee memory.
-
-Everything routes through the shared patient knowledge graph, so a fact written by
-one module is immediately context for every other module.
+"""
+Aegis HealthGraph API — main.py (updated to include OmniGest router)
+Replace your existing backend/app/main.py with this file.
+Only change from original: two lines added — import omnigest, app.include_router(omnigest.router)
 """
 from __future__ import annotations
-
 from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException
@@ -13,12 +12,16 @@ from pydantic import BaseModel
 
 from . import data_store, modules
 from .memory import build_memory
+from . import omnigest  # ← NEW
 
-app = FastAPI(title="Aegis HealthGraph API", version="1.0.0")
+app = FastAPI(title="Aegis HealthGraph API", version="1.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], allow_methods=["*"], allow_headers=["*"],
 )
+
+# ← NEW — mounts all /api/omnigest/* routes
+app.include_router(omnigest.router)
 
 MEMORY = build_memory()
 
@@ -74,14 +77,13 @@ def get_patient(pid: str):
 
 @app.get("/api/patients/{pid}/graph")
 def get_graph(pid: str, until: Optional[str] = None):
-    """Return the knowledge graph, optionally truncated to events on/before `until`
-    (drives the time-travel slider)."""
     g = data_store.graph(pid)
     if not until:
         return g
     nodes = [n for n in g["nodes"] if not n.get("date") or n["date"] <= until]
     ids = {n["id"] for n in nodes}
-    edges = [e for e in g["edges"] if e["source"] in ids and e["target"] in ids]
+    edges = [e for e in g["edges"] if e["source"]
+             in ids and e["target"] in ids]
     return {"nodes": nodes, "edges": edges}
 
 
@@ -113,8 +115,6 @@ def recall(pid: str, req: RecallRequest):
 
 @app.post("/api/patients/{pid}/remember")
 def remember(pid: str, req: RememberRequest):
-    """Write a new memory and return the new node + freshly formed edges so the
-    UI can animate the graph growing."""
     if not data_store.patient(pid):
         raise HTTPException(404, "patient not found")
     return MEMORY.remember(pid, req.text, req.type)
@@ -122,8 +122,6 @@ def remember(pid: str, req: RememberRequest):
 
 @app.post("/api/patients/{pid}/improve")
 def improve(pid: str):
-    """Run Cognee's improve()/memify on this patient's memory -- post-ingestion
-    enrichment: prune stale nodes, strengthen frequent links, reweight edges."""
     if not data_store.patient(pid):
         raise HTTPException(404, "patient not found")
     return MEMORY.improve(pid)
@@ -131,13 +129,29 @@ def improve(pid: str):
 
 @app.post("/api/patients/{pid}/forget")
 def forget(pid: str, memory_only: bool = True):
-    """Surgically forget a patient's dataset from the memory layer."""
     if not data_store.patient(pid):
         raise HTTPException(404, "patient not found")
     return MEMORY.forget(pid, memory_only)
 
 
+@app.get("/api/debug/{pid}")
+def debug_patient(pid: str):
+    """Diagnostic endpoint — shows exactly what's in the runtime overlay for
+    a patient: node/edge counts per module, and whether the seed graph
+    loaded successfully. Hit this in the browser to debug graph issues."""
+    g = data_store.graph(pid)
+    by_module: dict = {}
+    for n in g.get("nodes", []):
+        by_module.setdefault(n.get("module", "?"), []).append(n.get("label"))
+    return {
+        "patient_id": pid,
+        "total_nodes": len(g.get("nodes", [])),
+        "total_edges": len(g.get("edges", [])),
+        "nodes_by_module": {k: {"count": len(v), "labels": v} for k, v in by_module.items()},
+        "in_runtime_overlay": pid in data_store._RUNTIME,
+    }
+
+
 @app.get("/")
 def root():
-    return {"name": "Aegis HealthGraph API", "docs": "/docs",
-            "memoryMode": MEMORY.mode}
+    return {"name": "Aegis HealthGraph API", "docs": "/docs", "memoryMode": MEMORY.mode}

@@ -1,3 +1,9 @@
+/**
+ * GraphExplorer.tsx — updated with defensive graph merging.
+ * Replace frontend/src/pages/GraphExplorer.tsx with this file.
+ * Only change: `graph` is now a safe union of `live` and `loaded` (never
+ * silently drops nodes), matching the same fix applied to OmniGest.tsx.
+ */
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import KnowledgeGraph from "../components/KnowledgeGraph";
@@ -19,7 +25,17 @@ export default function GraphExplorer() {
   const [improving, setImproving] = useState(false);
   const [lifecycleMsg, setLifecycleMsg] = useState<string | null>(null);
 
-  const graph = live ?? loaded;
+  // Defensive merge — never let `graph` be smaller than `loaded`. See
+  // OmniGest.tsx for the same pattern and rationale.
+  const graph = useMemo<Graph | null>(() => {
+    if (!live) return loaded;
+    if (!loaded) return live;
+    const nodeMap = new Map(loaded.nodes.map((n) => [n.id, n]));
+    live.nodes.forEach((n) => nodeMap.set(n.id, n));
+    const edgeMap = new Map(loaded.edges.map((e) => [e.id, e]));
+    live.edges.forEach((e) => edgeMap.set(e.id, e));
+    return { nodes: Array.from(nodeMap.values()), edges: Array.from(edgeMap.values()) };
+  }, [live, loaded]);
 
   function toggleModule(k: ModuleKey) {
     setHidden((prev) => {
@@ -57,11 +73,11 @@ export default function GraphExplorer() {
     setAdding(true);
     try {
       const res = await api.remember(selectedId, text);
-      const next: Graph = {
-        nodes: [...graph!.nodes, res.node],
-        edges: [...graph!.edges, ...res.edges],
-      };
-      setLive(next);
+      // Refetch the authoritative graph rather than locally splicing, so
+      // this stays consistent with whatever the backend actually persisted
+      // (matches OmniGest's commit flow).
+      const fresh = await api.graph(selectedId);
+      setLive(fresh);
       setStepIdx(-1);
       setFlash([res.node.id, ...res.edges.map((e) => e.target)]);
       setText("");
@@ -75,6 +91,8 @@ export default function GraphExplorer() {
     setImproving(true);
     try {
       const res = await api.improve(selectedId);
+      const fresh = await api.graph(selectedId);
+      setLive(fresh);
       setLifecycleMsg(res.message);
       setTimeout(() => setLifecycleMsg((m) => (m === res.message ? null : m)), 7000);
     } finally {
@@ -168,7 +186,7 @@ export default function GraphExplorer() {
               {stepIdx < 0 || stepIdx >= dates.length - 1 ? "Full history" : dates[stepIdx]?.slice(0, 7)}
             </span>
           </div>
-          <KnowledgeGraph graph={viewGraph} height={560} highlight={flash} onSelect={setSelectedNode} hiddenModules={hidden} />
+          <KnowledgeGraph key={graph.nodes.length} graph={viewGraph} height={560} highlight={flash} onSelect={setSelectedNode} hiddenModules={hidden} />
         </GlassCard>
 
         {/* Node detail */}

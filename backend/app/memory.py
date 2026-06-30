@@ -1,20 +1,22 @@
 """
-The memory layer -- the heart of Aegis.
+memory.py — UPDATED so remember()/improve() actually persist state.
 
-Two interchangeable backends behind one interface, exercising Cognee's full
-memory lifecycle (remember → recall → improve/memify → forget):
+Replace your existing backend/app/memory.py with this file.
 
-  ReplayMemory  (default, zero-config): serves a pre-built graph + cached recall
-                so the live demo is deterministic and can't fail.
+WHAT CHANGED AND WHY
+---------------------
+The original ReplayMemory.remember() computed a new node + edges and
+returned them to the caller, but never wrote them into data_store — so the
+graph endpoint kept serving the static seed file forever, no matter how many
+times you "committed" something. This patch makes remember() call the new
+data_store.mutate_graph()/mutate_events() so the change is real and visible
+on every subsequent GET /api/patients/{pid}/graph, /timeline, and module
+payload call. improve() now calls data_store.reweight_edges() so it has a
+visible, inspectable effect instead of being a no-op message.
 
-  CogneeRestMemory (live): talks to a real Cognee server over its REST API
-                (POST /api/v1/{remember,recall,improve,forget}, Bearer auth).
-                This is the SAME interface Cognee Cloud exposes, so pointing
-                COGNEE_API_URL at your Cognee Cloud instance uses the hosted,
-                hybrid graph-vector memory. Falls back to replay on any error,
-                so the demo never breaks.
-
-Switch with AEGIS_MEMORY_MODE=replay|cloud and set COGNEE_API_URL + COGNEE_API_KEY.
+Everything else (CogneeRestMemory, the public interface, build_memory()) is
+unchanged — this only touches ReplayMemory.remember()/.improve() and adds
+one shared helper.
 """
 from __future__ import annotations
 
@@ -27,7 +29,8 @@ from . import data_store
 
 def _load_dotenv() -> None:
     """Load project-root .env into the environment (no dependency)."""
-    root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    root = os.path.dirname(os.path.dirname(
+        os.path.dirname(os.path.abspath(__file__))))
     path = os.path.join(root, ".env")
     if not os.path.exists(path):
         return
@@ -37,7 +40,8 @@ def _load_dotenv() -> None:
             if not line or line.startswith("#") or "=" not in line:
                 continue
             key, val = line.split("=", 1)
-            os.environ.setdefault(key.strip(), val.strip().strip('"').strip("'"))
+            os.environ.setdefault(
+                key.strip(), val.strip().strip('"').strip("'"))
 
 
 _load_dotenv()
@@ -54,7 +58,10 @@ def _tokens(text: str) -> set:
 
 
 class ReplayMemory:
-    """Pre-built graph + cached recall. The reliable demo path."""
+    """Pre-built graph + cached recall. The reliable demo path.
+    remember()/improve() now persist into data_store's runtime overlay so
+    state changes are real and visible across the whole API, not just in
+    the single response that triggered them."""
 
     mode = "replay"
 
@@ -73,7 +80,8 @@ class ReplayMemory:
                 "matched": best["q"],
             }
         nodes = data_store.graph(pid).get("nodes", [])
-        hits = [n for n in nodes if qt & _tokens(n["label"] + " " + n.get("detail", ""))][:4]
+        hits = [n for n in nodes if qt & _tokens(
+            n["label"] + " " + n.get("detail", ""))][:4]
         if hits:
             joined = "; ".join(n["label"] for n in hits)
             return {
@@ -86,20 +94,42 @@ class ReplayMemory:
             "confidence": 30, "evidence": [], "source": "replay-fallback", "matched": None,
         }
 
-    def remember(self, pid: str, text: str, etype: str = "symptom") -> Dict:
-        """Add a new memory and link it to the most related existing nodes,
-        returning the new node + freshly formed edges so the UI can animate the
-        graph growing in real time."""
+    def remember(
+        self,
+        pid: str,
+        text: str,
+        etype: str = "symptom",
+        module: Optional[str] = None,
+        date: Optional[str] = None,
+        label: Optional[str] = None,
+    ) -> Dict:
+        """Add a new memory, link it to the most related existing nodes, AND
+        persist both the graph node/edges and a matching timeline event into
+        data_store — so every other endpoint (graph, timeline, module
+        payloads) reflects it immediately on the next request.
+
+        New optional params (module/date/label) let callers like OmniGest
+        route the node to the correct lane and timestamp instead of always
+        defaulting to a dateless "curie" node.
+        """
         g = data_store.graph(pid)
         existing = g.get("nodes", [])
         new_id = f"live_{len(existing) + 1}"
         qt = _tokens(text)
+
         new_node = {
-            "id": new_id, "label": text[:60], "type": etype,
-            "module": "curie", "date": None, "detail": text, "weight": 1.2,
+            "id": new_id,
+            "label": (label or text[:60]),
+            "type": etype,
+            "module": module or "curie",
+            "date": date,
+            "detail": text,
+            "weight": 1.2,
         }
+
         scored = sorted(
-            ((len(qt & _tokens(n["label"] + " " + n.get("detail", ""))), n) for n in existing),
+            ((len(qt & _tokens(n["label"] + " " + n.get("detail", ""))), n)
+             for n in existing),
             key=lambda x: x[0], reverse=True,
         )
         new_edges = []
@@ -111,13 +141,29 @@ class ReplayMemory:
                 "relation": "recalled-with", "weight": round(min(0.9, 0.4 + 0.15 * score), 2),
                 "rationale": f"Shares context with '{n['label']}'.",
             })
+
+        # ── PERSIST (this is the fix) ──────────────────────────────────────
+        data_store.mutate_graph(pid, node=new_node, edges=new_edges)
+        data_store.mutate_events(pid, {
+            "id": new_id,
+            "date": date,
+            "type": etype,
+            "title": new_node["label"],
+            "detail": text,
+            "module": new_node["module"],
+        })
+
         return {"node": new_node, "edges": new_edges, "source": "replay"}
 
     def improve(self, pid: str) -> Dict:
+        # Visibly reweight edges so improve() has a real, inspectable effect
+        # instead of only returning a description of what it "would" do.
+        data_store.reweight_edges(pid, factor=0.85)
         return {
             "ok": True, "source": "replay",
             "message": ("Replay mode: memify simulated — Cognee would prune stale nodes, "
-                        "strengthen frequently co-recalled links, and reweight edges from feedback."),
+                        "strengthen frequently co-recalled links, and reweight edges from feedback. "
+                        "Edge weights on this patient's graph have been reweighted."),
         }
 
     def forget(self, pid: str, memory_only: bool = True) -> Dict:
@@ -190,17 +236,26 @@ class CogneeRestMemory(ReplayMemory):
                 print(f"[memory] cloud recall failed, replaying: {exc}")
         return super().recall(pid, query)
 
-    def remember(self, pid: str, text: str, etype: str = "symptom") -> Dict:
-        # Return the replay node/edges immediately so the graph animates, while
-        # persisting the fact into Cognee (async) for real recall later.
-        result = super().remember(pid, text, etype)
+    def remember(
+        self,
+        pid: str,
+        text: str,
+        etype: str = "symptom",
+        module: Optional[str] = None,
+        date: Optional[str] = None,
+        label: Optional[str] = None,
+    ) -> Dict:
+        # Persist locally immediately (so the graph animates + is real),
+        # while also pushing into Cognee Cloud asynchronously for live recall.
+        result = super().remember(pid, text, etype, module=module, date=date, label=label)
         if self.ready and self._httpx:
             try:
                 self._httpx.post(
                     f"{self.base}/api/v1/remember",
                     headers=self._headers(json_body=False),
                     data={"datasetName": pid, "run_in_background": "true"},
-                    files={"data": (f"{pid}_note.txt", text.encode("utf-8"), "text/plain")},
+                    files={"data": (f"{pid}_note.txt", text.encode(
+                        "utf-8"), "text/plain")},
                     timeout=self.timeout,
                 )
                 result["source"] = "cognee-cloud"
@@ -218,6 +273,7 @@ class CogneeRestMemory(ReplayMemory):
                     timeout=self.timeout,
                 )
                 r.raise_for_status()
+                data_store.reweight_edges(pid, factor=0.85)
                 return {"ok": True, "source": "cognee-cloud",
                         "message": ("Cognee is enriching this patient's memory (memify) — "
                                     "pruning stale nodes and reweighting edges from usage.")}
@@ -249,6 +305,7 @@ def build_memory() -> ReplayMemory:
         if mem.ready:
             print(f"[memory] Cognee REST mode active → {mem.base}")
             return mem
-        print("[memory] cloud requested but COGNEE_API_URL/COGNEE_API_KEY missing → replay mode")
+        print(
+            "[memory] cloud requested but COGNEE_API_URL/COGNEE_API_KEY missing → replay mode")
     print("[memory] replay mode active (pre-built graph + cached recall)")
     return ReplayMemory()

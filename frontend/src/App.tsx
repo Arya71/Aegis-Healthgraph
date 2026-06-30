@@ -1,3 +1,8 @@
+/**
+ * App.tsx — updated to add OmniGest route.
+ * Replace your existing frontend/src/App.tsx with this file.
+ * Only change: import OmniGest + one new <Route> line.
+ */
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import Landing from "./pages/Landing";
@@ -10,6 +15,7 @@ import RxShield from "./pages/modules/RxShield";
 import NutriSim from "./pages/modules/NutriSim";
 import Pathos from "./pages/modules/Pathos";
 import NeuroGraph from "./pages/modules/NeuroGraph";
+import OmniGest from "./pages/modules/OmniGest"; // ← NEW
 
 export default function App() {
   return (
@@ -27,6 +33,7 @@ export default function App() {
           <Route path="/nutrisim" element={<NutriSim />} />
           <Route path="/pathos" element={<Pathos />} />
           <Route path="/neurograph" element={<NeuroGraph />} />
+          <Route path="/omnigest" element={<OmniGest />} /> {/* ← NEW */}
         </Route>
       </Routes>
     </>

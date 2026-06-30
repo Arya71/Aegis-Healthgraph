@@ -1,3 +1,8 @@
+/**
+ * Ecosystem.tsx — updated to include OmniGest (module 7).
+ * Replace frontend/src/components/landing/Ecosystem.tsx with this file.
+ * Changes: "omnigest" added to CONTENT; safety guard added; heading updated.
+ */
 import { useNavigate } from "react-router-dom";
 import { MODULE_COLOR, MODULES } from "../../lib/api";
 import type { ModuleKey } from "../../lib/types";
@@ -53,20 +58,35 @@ const CONTENT: Record<ModuleKey, { para: string; bullets: string[] }> = {
       "Quantifies cognitive change passively, without formal testing",
     ],
   },
+  omnigest: {
+    para: "Raw medical files — blood panels, X-rays, pathology reports — are rich with signal but locked in unstructured formats. OmniGest uses Gemini 2.5 Flash to extract structured clinical entities from any PDF or image, strips all PII, lets the clinician review and edit every finding, then commits the verified data into the shared Cognee graph so all six modules gain context instantly.",
+    bullets: [
+      "Gemini 2.5 Flash multimodal extraction — PDFs, X-rays, scans, pathology reports",
+      "Confidence heatmapping flags low-quality regions for mandatory clinical review",
+      "One commit triggers remember() → recall() risk analysis → improve() edge reweighting",
+    ],
+  },
 };
 
 export default function Ecosystem() {
   const navigate = useNavigate();
   return (
-    <section id="ecosystem" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-24">
+    <section
+      id="ecosystem"
+      className="mx-auto max-w-6xl scroll-mt-24 px-6 py-24"
+    >
       <Reveal className="mx-auto max-w-2xl text-center">
-        <div className="text-xs font-semibold uppercase tracking-[0.2em] text-fg/40">The ecosystem</div>
+        <div className="text-xs font-semibold uppercase tracking-[0.2em] text-fg/40">
+          The ecosystem
+        </div>
         <h2 className="mt-2 text-4xl font-extrabold tracking-tight md:text-5xl">
-          Six agents. <span className="gradient-text">One shared memory.</span>
+          Seven agents.{" "}
+          <span className="gradient-text">One shared memory.</span>
         </h2>
         <p className="mt-4 text-lg leading-relaxed text-fg/55">
-          Each module reasons over the same Cognee graph — so an insight from one immediately becomes
-          evidence for the next. They don't sit side by side; they compound.
+          Each module reasons over the same Cognee graph — so an insight from
+          one immediately becomes evidence for the next. They don't sit side by
+          side; they compound.
         </p>
       </Reveal>
 
@@ -74,25 +94,43 @@ export default function Ecosystem() {
         {MODULES.map((m, i) => {
           const flip = i % 2 === 1;
           const c = MODULE_COLOR[m.key];
-          const { para, bullets } = CONTENT[m.key];
+          const content = CONTENT[m.key];
+          if (!content) return null; // safety guard — unknown module keys never crash
+          const { para, bullets } = content;
           return (
-            <div key={m.key} className="grid items-center gap-10 md:grid-cols-2">
+            <div
+              key={m.key}
+              className="grid items-center gap-10 md:grid-cols-2"
+            >
               <Reveal x={flip ? 44 : -44} className={flip ? "md:order-2" : ""}>
                 <FeatureViz module={m.key} />
               </Reveal>
-              <Reveal x={flip ? -44 : 44} delay={0.05} className={flip ? "md:order-1" : ""}>
+              <Reveal
+                x={flip ? -44 : 44}
+                delay={0.05}
+                className={flip ? "md:order-1" : ""}
+              >
                 <div
                   className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold"
-                  style={{ color: c, background: `${c}1a`, border: `1px solid ${c}40` }}
+                  style={{
+                    color: c,
+                    background: `${c}1a`,
+                    border: `1px solid ${c}40`,
+                  }}
                 >
-                  <span className="text-base">{m.icon}</span> {m.name} · {m.tagline}
+                  <span className="text-base">{m.icon}</span> {m.name} ·{" "}
+                  {m.tagline}
                 </div>
-                <h3 className="mt-4 text-2xl font-bold text-fg md:text-3xl">{m.name}</h3>
+                <h3 className="mt-4 text-2xl font-bold text-fg md:text-3xl">
+                  {m.name}
+                </h3>
                 <p className="mt-3 leading-relaxed text-fg/65">{para}</p>
                 <ul className="mt-5 space-y-2.5">
                   {bullets.map((b) => (
                     <li key={b} className="flex gap-3 text-sm text-fg/75">
-                      <span className="mt-0.5 shrink-0" style={{ color: c }}>◆</span>
+                      <span className="mt-0.5 shrink-0" style={{ color: c }}>
+                        ◆
+                      </span>
                       {b}
                     </li>
                   ))}

@@ -12,7 +12,7 @@
     "story": "A 4-year autoimmune + metabolic story hidden across six specialists.",
     "hero": true,
     "eventCount": 20,
-    "hue": 56
+    "hue": 44
   },
   {
     "id": "patient_002",
@@ -25,7 +25,7 @@
     "story": "Cognitive decline tracked as the patient's own knowledge graph thins.",
     "hero": true,
     "eventCount": 7,
-    "hue": 249
+    "hue": 298
   },
   {
     "id": "patient_003",
@@ -39,7 +39,7 @@
     "story": "Routine record: type 2 diabetes, hypertension.",
     "hero": false,
     "eventCount": 4,
-    "hue": 176
+    "hue": 12
   },
   {
     "id": "patient_004",
@@ -53,7 +53,7 @@
     "story": "Routine record: migraine, anxiety.",
     "hero": false,
     "eventCount": 4,
-    "hue": 251
+    "hue": 197
   },
   {
     "id": "patient_005",
@@ -67,7 +67,7 @@
     "story": "Routine record: atrial fibrillation, polypharmacy.",
     "hero": false,
     "eventCount": 4,
-    "hue": 95
+    "hue": 64
   },
   {
     "id": "patient_006",
@@ -81,7 +81,7 @@
     "story": "Routine record: hypothyroidism, vitamin d deficiency.",
     "hero": false,
     "eventCount": 4,
-    "hue": 229
+    "hue": 107
   },
   {
     "id": "patient_007",
@@ -95,7 +95,7 @@
     "story": "Routine record: asthma, seasonal allergies.",
     "hero": false,
     "eventCount": 4,
-    "hue": 289
+    "hue": 25
   },
   {
     "id": "patient_008",
@@ -108,7 +108,7 @@
     "story": "Routine record: rheumatoid arthritis.",
     "hero": false,
     "eventCount": 4,
-    "hue": 126
+    "hue": 149
   },
   {
     "id": "patient_009",
@@ -122,7 +122,7 @@
     "story": "Routine record: gerd, high cholesterol.",
     "hero": false,
     "eventCount": 4,
-    "hue": 357
+    "hue": 286
   },
   {
     "id": "patient_010",
@@ -136,7 +136,7 @@
     "story": "Routine record: pcos, insulin resistance.",
     "hero": false,
     "eventCount": 4,
-    "hue": 189
+    "hue": 227
   },
   {
     "id": "patient_011",
@@ -150,7 +150,7 @@
     "story": "Routine record: osteoporosis, mild cognitive complaints.",
     "hero": false,
     "eventCount": 4,
-    "hue": 69
+    "hue": 272
   },
   {
     "id": "patient_012",
@@ -163,6 +163,6 @@
     "story": "Routine record: chronic kidney disease stage 2.",
     "hero": false,
     "eventCount": 4,
-    "hue": 88
+    "hue": 246
   }
 ]

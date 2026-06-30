@@ -1,5 +1,11 @@
+/**
+ * types.ts — updated to add "omnigest" to ModuleKey union.
+ * Replace your existing frontend/src/lib/types.ts with this file.
+ * Only change: "omnigest" added to ModuleKey.
+ */
 export type ModuleKey =
-  | "curie" | "medsync" | "rxshield" | "nutrisim" | "pathos" | "neurograph";
+  | "curie" | "medsync" | "rxshield" | "nutrisim" | "pathos" | "neurograph"
+  | "omnigest"; // ← NEW
 
 export interface Patient {
   id: string;
@@ -56,6 +62,7 @@ export interface Insight {
   confidence: number;
   crossModule: boolean;
   evidence: string[];
+  sourceTag?: string; // "omnigest" when sourced from a committed upload — drives a UI badge
 }
 
 export interface CrossInsight {

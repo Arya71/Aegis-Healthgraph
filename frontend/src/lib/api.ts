@@ -1,3 +1,7 @@
+/**
+ * api.ts — updated to add OmniGest module entry.
+ * Replace your existing frontend/src/lib/api.ts with this file.
+ */
 import type {
   CrossInsight, Graph, Insight, ModuleKey, Patient, PatientDetail,
   RecallResult, RememberResult,
@@ -43,15 +47,21 @@ export const api = {
 };
 
 export const MODULES: { key: ModuleKey; name: string; tagline: string; icon: string }[] = [
-  { key: "curie", name: "Curie", tagline: "Diagnostic Cross-Reference", icon: "🔬" },
-  { key: "medsync", name: "MedSync", tagline: "Longitudinal Timeline", icon: "🧭" },
-  { key: "rxshield", name: "RxShield", tagline: "Medication Safety", icon: "🛡️" },
-  { key: "nutrisim", name: "NutriSim", tagline: "Lifestyle Intelligence", icon: "🥗" },
-  { key: "pathos", name: "Pathos", tagline: "Mental-Health Memory", icon: "🫀" },
-  { key: "neurograph", name: "NeuroGraph", tagline: "Cognitive Decline", icon: "🧠" },
+  { key: "curie",      name: "Curie",      tagline: "Diagnostic Cross-Reference", icon: "🔬" },
+  { key: "medsync",    name: "MedSync",    tagline: "Longitudinal Timeline",       icon: "🧭" },
+  { key: "rxshield",   name: "RxShield",   tagline: "Medication Safety",           icon: "🛡️" },
+  { key: "nutrisim",   name: "NutriSim",   tagline: "Lifestyle Intelligence",      icon: "🥗" },
+  { key: "pathos",     name: "Pathos",     tagline: "Mental-Health Memory",        icon: "🫀" },
+  { key: "neurograph", name: "NeuroGraph", tagline: "Cognitive Decline",           icon: "🧠" },
+  { key: "omnigest",   name: "OmniGest",   tagline: "Multimodal Ingestion Hub",    icon: "📂" },
 ];
 
 export const MODULE_COLOR: Record<ModuleKey, string> = {
-  curie: "#6ea8ff", medsync: "#7c6cff", rxshield: "#ff7eb6",
-  nutrisim: "#37d6b3", pathos: "#ffb86b", neurograph: "#b388ff",
+  curie:      "#6ea8ff",
+  medsync:    "#7c6cff",
+  rxshield:   "#ff7eb6",
+  nutrisim:   "#37d6b3",
+  pathos:     "#ffb86b",
+  neurograph: "#b388ff",
+  omnigest:   "#0fe0c8",
 };
