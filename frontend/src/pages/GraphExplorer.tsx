@@ -11,12 +11,11 @@ import { GlassCard, Pill, SectionTitle, Spinner } from "../components/ui";
 import { api, MODULE_COLOR, MODULES } from "../lib/api";
 import { usePatients } from "../lib/PatientContext";
 import { usePatientData } from "../lib/usePatientData";
-import type { Graph, GraphNode, ModuleKey } from "../lib/types";
+import type { GraphNode, ModuleKey } from "../lib/types";
 
 export default function GraphExplorer() {
   const { selectedId } = usePatients();
-  const { graph: loaded, loading } = usePatientData(selectedId);
-  const [live, setLive] = useState<Graph | null>(null);
+  const { graph: loaded, loading, refetchGraph } = usePatientData(selectedId);
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
   const [text, setText] = useState("");
   const [adding, setAdding] = useState(false);
@@ -25,17 +24,9 @@ export default function GraphExplorer() {
   const [improving, setImproving] = useState(false);
   const [lifecycleMsg, setLifecycleMsg] = useState<string | null>(null);
 
-  // Defensive merge — never let `graph` be smaller than `loaded`. See
-  // OmniGest.tsx for the same pattern and rationale.
-  const graph = useMemo<Graph | null>(() => {
-    if (!live) return loaded;
-    if (!loaded) return live;
-    const nodeMap = new Map(loaded.nodes.map((n) => [n.id, n]));
-    live.nodes.forEach((n) => nodeMap.set(n.id, n));
-    const edgeMap = new Map(loaded.edges.map((e) => [e.id, e]));
-    live.edges.forEach((e) => edgeMap.set(e.id, e));
-    return { nodes: Array.from(nodeMap.values()), edges: Array.from(edgeMap.values()) };
-  }, [live, loaded]);
+  // refetchGraph() updates `loaded` in place inside usePatientData, so
+  // `graph` always reflects the latest server state after any mutation.
+  const graph = loaded;
 
   function toggleModule(k: ModuleKey) {
     setHidden((prev) => {
@@ -73,11 +64,7 @@ export default function GraphExplorer() {
     setAdding(true);
     try {
       const res = await api.remember(selectedId, text);
-      // Refetch the authoritative graph rather than locally splicing, so
-      // this stays consistent with whatever the backend actually persisted
-      // (matches OmniGest's commit flow).
-      const fresh = await api.graph(selectedId);
-      setLive(fresh);
+      await refetchGraph();
       setStepIdx(-1);
       setFlash([res.node.id, ...res.edges.map((e) => e.target)]);
       setText("");
@@ -91,8 +78,7 @@ export default function GraphExplorer() {
     setImproving(true);
     try {
       const res = await api.improve(selectedId);
-      const fresh = await api.graph(selectedId);
-      setLive(fresh);
+      await refetchGraph();
       setLifecycleMsg(res.message);
       setTimeout(() => setLifecycleMsg((m) => (m === res.message ? null : m)), 7000);
     } finally {

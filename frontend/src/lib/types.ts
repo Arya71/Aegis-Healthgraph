@@ -5,7 +5,8 @@
  */
 export type ModuleKey =
   | "curie" | "medsync" | "rxshield" | "nutrisim" | "pathos" | "neurograph"
-  | "omnigest"; // ← NEW
+  | "omnigest"
+  | "healthforecast"; // ← NEW (module 8)
 
 export interface Patient {
   id: string;
@@ -98,4 +99,91 @@ export interface ModuleMeta {
   name: string;
   tagline: string;
   accent: string;
+}
+
+// ── HealthForecast (module 8) ────────────────────────────────────────────────
+
+export interface ConditionRisk {
+  key: string;
+  label: string;
+  risk: number;
+  signal_hits: number;
+  insight_boost: number;
+}
+
+export interface TrajectoryPoint {
+  year: string;
+  patient: number;
+  baseline: number;
+  divergence: number;
+}
+
+export interface InterventionRank {
+  lever: string;
+  label: string;
+  unit: string;
+  estimated_risk_reduction: number;
+  affected_conditions: string[];
+}
+
+export interface SandboxLever {
+  key: string;
+  label: string;
+  unit: string;
+  affects: Record<string, number>;
+}
+
+export interface HealthForecastPayload {
+  conditionRisks: ConditionRisk[];
+  trajectory: TrajectoryPoint[];
+  interventionRanking: InterventionRank[];
+  leverCatalog: SandboxLever[];
+  insights: Insight[];
+  meta: ModuleMeta;
+}
+
+export interface SandboxCurve {
+  condition: string;
+  key: string;
+  curve: number[];
+}
+
+export interface SandboxDelta {
+  condition: string;
+  key: string;
+  year5_baseline: number;
+  year5_projected: number;
+  year5_delta: number;
+}
+
+export interface SandboxResult {
+  ok: boolean;
+  baseline_5yr: SandboxCurve[];
+  projected_5yr: SandboxCurve[];
+  delta_summary: SandboxDelta[];
+  improve_result: { ok: boolean; source: string; message: string };
+  source: string;
+}
+
+export interface RiskChainLink {
+  from: string;
+  to: string;
+  from_risk: number;
+  to_risk: number;
+  mechanism: string;
+}
+
+export interface SentinelResult {
+  ok: boolean;
+  answer: string;
+  confidence: number;
+  risk_chain: RiskChainLink[];
+  evidence: string[];
+  source: string;
+}
+
+export interface NarrativeResult {
+  ok: boolean;
+  narrative: string;
+  source: string;
 }

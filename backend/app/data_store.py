@@ -37,8 +37,7 @@ import os
 from functools import lru_cache
 from typing import Any, Dict, List, Optional
 
-ROOT = os.path.dirname(os.path.dirname(
-    os.path.dirname(os.path.abspath(__file__))))
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DATA = os.path.join(ROOT, "data")
 
 # ── runtime overlay ──────────────────────────────────────────────────────────
@@ -127,8 +126,7 @@ def _ensure_runtime(pid: str) -> Dict:
 
 def patients() -> List[Dict]:
     seed_ids = {p["id"] for p in _patients_file()}
-    overlay_patients = [r["patient"]
-                        for pid, r in _RUNTIME.items() if pid not in seed_ids or True]
+    overlay_patients = [r["patient"] for pid, r in _RUNTIME.items() if pid not in seed_ids or True]
     # de-dupe: prefer overlay version (may have updated eventCount, etc.) over seed
     by_id = {p["id"]: p for p in _patients_file()}
     for pid, r in _RUNTIME.items():
@@ -165,17 +163,26 @@ def cross_insights() -> Dict[str, List[Dict]]:
 
 
 def graph(pid: str) -> Dict[str, List[Dict]]:
+    """Return a copy of the patient's graph overlay so callers get current
+    state on every call but cannot accidentally corrupt the stored overlay
+    by mutating the returned dict. Mutations must go through mutate_graph()."""
     r = _ensure_runtime(pid)
-    return r["graph"]
+    # Shallow copy of the top-level dict + new list objects for nodes/edges
+    # so append() on the returned value doesn't touch the overlay.
+    # Individual node/edge dicts are still shared references (fine — callers
+    # read them, they don't mutate individual dicts in practice).
+    return {
+        "nodes": list(r["graph"]["nodes"]),
+        "edges": list(r["graph"]["edges"]),
+    }
 
 
 def patient(pid: str) -> Dict:
-    if pid in _RUNTIME:
-        return _RUNTIME[pid]["patient"]
-    for p in _patients_file():
-        if p["id"] == pid:
-            return p
-    return {}
+    """Always ensures the runtime overlay exists for seeded patients so that
+    any subsequent mutation (remember, mutate_graph) has a fully-seeded
+    overlay to append to, rather than starting from an empty shell."""
+    r = _ensure_runtime(pid)
+    return r["patient"] if r else {}
 
 
 # ── public mutations (NEW) ───────────────────────────────────────────────────
@@ -250,9 +257,7 @@ def reweight_edges(pid: str, factor: float = 0.85) -> Dict[str, List[Dict]]:
 
 def add_patient(name: str, age: int, sex: str, conditions: List[str], story: str) -> Dict:
     """Create a navigable patient in the in-memory store (demo flow)."""
-    n = len(_patients_file()) + \
-        len([p for p in _RUNTIME if p not in {
-            pp["id"] for pp in _patients_file()}]) + 1
+    n = len(_patients_file()) + len([p for p in _RUNTIME if p not in {pp["id"] for pp in _patients_file()}]) + 1
     pid = f"patient_{n:03d}"
     cstr = ", ".join(conditions) if conditions else "general wellness"
     events_list = [

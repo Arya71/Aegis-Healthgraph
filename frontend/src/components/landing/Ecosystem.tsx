@@ -66,27 +66,28 @@ const CONTENT: Record<ModuleKey, { para: string; bullets: string[] }> = {
       "One commit triggers remember() → recall() risk analysis → improve() edge reweighting",
     ],
   },
+  healthforecast: {
+    para: "Every other module builds the graph; HealthForecast looks forward through it. It reads the accumulated density of a patient's entire Cognee history — including anything OmniGest has just committed — to project chronic-disease risk five years out, simulate hypothetical lifestyle interventions against the real graph, and rank which single change would move the needle most.",
+    bullets: [
+      "Lifestyle sandbox calls real improve() — simulations genuinely reweight the graph, not just the UI",
+      "Cross-system Failure Sentinel traces physiological cascades, like kidney stress → cardiovascular risk",
+      "Trajectory visualizer plots actual graph-risk against an optimal-aging baseline, year by year",
+    ],
+  },
 };
 
 export default function Ecosystem() {
   const navigate = useNavigate();
   return (
-    <section
-      id="ecosystem"
-      className="mx-auto max-w-6xl scroll-mt-24 px-6 py-24"
-    >
+    <section id="ecosystem" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-24">
       <Reveal className="mx-auto max-w-2xl text-center">
-        <div className="text-xs font-semibold uppercase tracking-[0.2em] text-fg/40">
-          The ecosystem
-        </div>
+        <div className="text-xs font-semibold uppercase tracking-[0.2em] text-fg/40">The ecosystem</div>
         <h2 className="mt-2 text-4xl font-extrabold tracking-tight md:text-5xl">
-          Seven agents.{" "}
-          <span className="gradient-text">One shared memory.</span>
+          Eight agents. <span className="gradient-text">One shared memory.</span>
         </h2>
         <p className="mt-4 text-lg leading-relaxed text-fg/55">
-          Each module reasons over the same Cognee graph — so an insight from
-          one immediately becomes evidence for the next. They don't sit side by
-          side; they compound.
+          Each module reasons over the same Cognee graph — so an insight from one immediately becomes
+          evidence for the next. They don't sit side by side; they compound.
         </p>
       </Reveal>
 
@@ -98,39 +99,23 @@ export default function Ecosystem() {
           if (!content) return null; // safety guard — unknown module keys never crash
           const { para, bullets } = content;
           return (
-            <div
-              key={m.key}
-              className="grid items-center gap-10 md:grid-cols-2"
-            >
+            <div key={m.key} className="grid items-center gap-10 md:grid-cols-2">
               <Reveal x={flip ? 44 : -44} className={flip ? "md:order-2" : ""}>
                 <FeatureViz module={m.key} />
               </Reveal>
-              <Reveal
-                x={flip ? -44 : 44}
-                delay={0.05}
-                className={flip ? "md:order-1" : ""}
-              >
+              <Reveal x={flip ? -44 : 44} delay={0.05} className={flip ? "md:order-1" : ""}>
                 <div
                   className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold"
-                  style={{
-                    color: c,
-                    background: `${c}1a`,
-                    border: `1px solid ${c}40`,
-                  }}
+                  style={{ color: c, background: `${c}1a`, border: `1px solid ${c}40` }}
                 >
-                  <span className="text-base">{m.icon}</span> {m.name} ·{" "}
-                  {m.tagline}
+                  <span className="text-base">{m.icon}</span> {m.name} · {m.tagline}
                 </div>
-                <h3 className="mt-4 text-2xl font-bold text-fg md:text-3xl">
-                  {m.name}
-                </h3>
+                <h3 className="mt-4 text-2xl font-bold text-fg md:text-3xl">{m.name}</h3>
                 <p className="mt-3 leading-relaxed text-fg/65">{para}</p>
                 <ul className="mt-5 space-y-2.5">
                   {bullets.map((b) => (
                     <li key={b} className="flex gap-3 text-sm text-fg/75">
-                      <span className="mt-0.5 shrink-0" style={{ color: c }}>
-                        ◆
-                      </span>
+                      <span className="mt-0.5 shrink-0" style={{ color: c }}>◆</span>
                       {b}
                     </li>
                   ))}

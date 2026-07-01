@@ -9,6 +9,7 @@ import math
 from typing import Dict, List
 
 from . import data_store
+from . import healthforecast  # ← NEW — module 8: Predictive Risk & Progression Engine
 
 MODULE_META = {
     "curie": {"name": "Curie", "tagline": "Diagnostic Cross-Reference Engine",
@@ -23,6 +24,8 @@ MODULE_META = {
                "accent": "#ffb86b"},
     "neurograph": {"name": "NeuroGraph", "tagline": "Cognitive Decline Monitor",
                    "accent": "#b388ff"},
+    "healthforecast": {"name": "HealthForecast", "tagline": "Predictive Risk & Progression Engine",
+                        "accent": "#37d6b3"},  # ← NEW
 }
 
 # RxShield hardcoded interaction knowledge (hackathon-simple, explainable).
@@ -135,6 +138,7 @@ def _neurograph(pid: str) -> Dict:
 BUILDERS = {
     "curie": _curie, "medsync": _medsync, "rxshield": _rxshield,
     "nutrisim": _nutrisim, "pathos": _pathos, "neurograph": _neurograph,
+    "healthforecast": healthforecast.build_payload,  # ← NEW
 }
 
 

@@ -22,7 +22,7 @@ import { GlassCard, Pill, SectionTitle, Spinner, Typewriter } from "../../compon
 import { api, MODULE_COLOR, MODULES } from "../../lib/api";
 import { usePatients } from "../../lib/PatientContext";
 import { usePatientData } from "../../lib/usePatientData";
-import type { Graph, GraphEdge, GraphNode, ModuleKey } from "../../lib/types";
+import type { Graph, GraphNode, ModuleKey } from "../../lib/types";
 
 // ─── colour tokens ────────────────────────────────────────────────────────────
 const TEAL   = "#0fe0c8";
@@ -552,19 +552,19 @@ function SoWhatPanel({ result }: { result: any }) {
 // ─── main component ───────────────────────────────────────────────────────────
 export default function OmniGest() {
   const { selectedId } = usePatients();
-  const { graph: baseGraph, loading: graphLoading } = usePatientData(selectedId);
+  const { graph: baseGraph, loading: graphLoading, refetchGraph } = usePatientData(selectedId);
 
   const [queue, setQueue] = useState<QueuedFile[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
+  // liveGraph holds the most recent full refetch after a commit.
+  // We take the UNION of baseGraph + liveGraph so nodes can never disappear:
+  // baseGraph is the seed (loaded at mount, updated via refetchGraph),
+  // liveGraph is the post-commit refetch. Either alone can be stale;
+  // their union is always correct regardless of race conditions.
   const [liveGraph, setLiveGraph] = useState<Graph | null>(null);
   const [flashNodes, setFlashNodes] = useState<string[]>([]);
 
-  // Defensive merge: liveGraph should always be a superset of baseGraph
-  // (it's populated by refetching the full patient graph after a commit),
-  // but if it's ever smaller for any reason — stale fetch, race condition,
-  // partial backend response — we never want the visible graph to silently
-  // lose the originally-seeded nodes. Union by id, liveGraph wins on conflict.
   const graph = useMemo<Graph | null>(() => {
     if (!liveGraph) return baseGraph;
     if (!baseGraph) return liveGraph;
@@ -694,36 +694,36 @@ export default function OmniGest() {
         q.map((x) => (x.id === qid ? { ...x, status: "committed", commitResult: res } : x))
       );
 
-      // Refetch the authoritative graph from the server — this is the
-      // reliable source of truth regardless of how many nodes/edges
-      // remember() actually created on the backend.
+      // Two-pronged update so nodes can never disappear regardless of timing:
+      // 1. Immediately set liveGraph from commit response for instant animation.
+      // 2. Also call refetchGraph() to update baseGraph durably.
+      // The useMemo union above then always shows the superset of both.
+      const prevIds = new Set((graph?.nodes ?? []).map((n) => n.id));
+
+      // Instant: use what the backend returned directly
+      if (res.node) {
+        const instant: Graph = {
+          nodes: [...(graph?.nodes ?? []), res.node, ...(res.edges ?? []).flatMap(() => [])],
+          edges: [...(graph?.edges ?? []), ...(res.edges ?? [])],
+        };
+        setLiveGraph(instant);
+        setFlashNodes([res.node.id]);
+        setTimeout(() => setFlashNodes([]), 3500);
+      }
+
+      // Durable: refetch the authoritative full graph from backend
       try {
-        const freshGraph = await api.graph(selectedId);
-        const prevIds = new Set((graph?.nodes ?? []).map((n) => n.id));
+        const freshGraph = await refetchGraph();
+        setLiveGraph(freshGraph);
         const newNodeIds = freshGraph.nodes
           .filter((n) => !prevIds.has(n.id))
           .map((n) => n.id);
-
-        setLiveGraph(freshGraph);
         if (newNodeIds.length) {
           setFlashNodes(newNodeIds);
           setTimeout(() => setFlashNodes([]), 3500);
-        } else if (res.node) {
-          // fallback: backend returned a single node directly
-          setFlashNodes([res.node.id]);
-          setTimeout(() => setFlashNodes([]), 3500);
         }
       } catch {
-        // fall back to optimistic local merge if refetch fails
-        if (res.node) {
-          const newGraph: Graph = {
-            nodes: [...(graph?.nodes ?? []), res.node],
-            edges: [...(graph?.edges ?? []), ...(res.edges ?? [])],
-          };
-          setLiveGraph(newGraph);
-          setFlashNodes([res.node.id]);
-          setTimeout(() => setFlashNodes([]), 3500);
-        }
+        // refetch failed — liveGraph already set from instant path above
       }
 
       toast(`✓ ${item.file.name} committed — ${res.nodes_added} entities added to graph`, "#4ade80");

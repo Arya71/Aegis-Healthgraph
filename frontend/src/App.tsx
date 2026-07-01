@@ -15,7 +15,8 @@ import RxShield from "./pages/modules/RxShield";
 import NutriSim from "./pages/modules/NutriSim";
 import Pathos from "./pages/modules/Pathos";
 import NeuroGraph from "./pages/modules/NeuroGraph";
-import OmniGest from "./pages/modules/OmniGest"; // ← NEW
+import OmniGest from "./pages/modules/OmniGest";
+import HealthForecast from "./pages/modules/HealthForecast"; // ← NEW (module 8)
 
 export default function App() {
   return (
@@ -33,7 +34,8 @@ export default function App() {
           <Route path="/nutrisim" element={<NutriSim />} />
           <Route path="/pathos" element={<Pathos />} />
           <Route path="/neurograph" element={<NeuroGraph />} />
-          <Route path="/omnigest" element={<OmniGest />} /> {/* ← NEW */}
+          <Route path="/omnigest" element={<OmniGest />} />
+          <Route path="/healthforecast" element={<HealthForecast />} /> {/* ← NEW */}
         </Route>
       </Routes>
     </>

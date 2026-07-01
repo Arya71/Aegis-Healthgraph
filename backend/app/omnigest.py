@@ -14,6 +14,7 @@ phone, email, physician names). Only clinical observations/values reach the grap
 from __future__ import annotations
 
 import base64
+import hashlib
 import json
 import os
 import re
@@ -41,6 +42,30 @@ def _mem():
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta"
+
+# ── Extraction cache ─────────────────────────────────────────────────────────
+# Keyed by MD5(file_bytes). Stores the raw Gemini JSON string so the full
+# ExtractionResponse can be reconstructed without touching the API again.
+# Lives in process memory — cleared on server restart, which is fine for
+# testing. Max 50 entries to prevent unbounded growth.
+_EXTRACTION_CACHE: Dict[str, str] = {}
+_CACHE_MAX = 50
+
+
+def _cache_key(content: bytes) -> str:
+    return hashlib.md5(content).hexdigest()
+
+
+def _cache_get(content: bytes) -> Optional[str]:
+    return _EXTRACTION_CACHE.get(_cache_key(content))
+
+
+def _cache_set(content: bytes, raw_json: str) -> None:
+    if len(_EXTRACTION_CACHE) >= _CACHE_MAX:
+        # evict oldest entry (insertion-order guaranteed in Python 3.7+)
+        _EXTRACTION_CACHE.pop(next(iter(_EXTRACTION_CACHE)))
+    _EXTRACTION_CACHE[_cache_key(content)] = raw_json
+
 
 # ── Module routing keyword map ───────────────────────────────────────────────
 MODULE_KEYWORDS: Dict[str, List[str]] = {
@@ -352,9 +377,19 @@ async def extract(
         return result
 
     try:
-        b64 = base64.b64encode(content).decode()
-        raw = _call_gemini(mime, b64)
-        data = _parse_gemini(raw)
+        # ── cache check ───────────────────────────────────────────────────
+        cached_raw = _cache_get(content)
+        if cached_raw:
+            print(
+                f"[omnigest] cache hit for {file.filename} ({_cache_key(content)[:8]}…) — skipping Gemini call")
+            data = _parse_gemini(cached_raw)
+        else:
+            print(
+                f"[omnigest] cache miss for {file.filename} — calling Gemini 2.5 Flash")
+            b64 = base64.b64encode(content).decode()
+            raw = _call_gemini(mime, b64)
+            _cache_set(content, raw)
+            data = _parse_gemini(raw)
 
         meta = data.get("metadata", {})
         entities = []
@@ -588,3 +623,22 @@ def batch_commit(req: BatchCommitRequest):
         ))
         results.append({"document_date": item.document_date, **r.dict()})
     return {"ok": True, "processed": len(results), "results": results}
+
+
+@router.get("/api/omnigest/cache")
+def cache_status():
+    """Show how many files are cached and their MD5 keys."""
+    return {
+        "cached_files": len(_EXTRACTION_CACHE),
+        "max": _CACHE_MAX,
+        "keys": list(_EXTRACTION_CACHE.keys()),
+    }
+
+
+@router.delete("/api/omnigest/cache")
+def cache_clear():
+    """Clear the extraction cache — next upload will call Gemini fresh."""
+    count = len(_EXTRACTION_CACHE)
+    _EXTRACTION_CACHE.clear()
+    print(f"[omnigest] extraction cache cleared ({count} entries removed)")
+    return {"ok": True, "cleared": count}

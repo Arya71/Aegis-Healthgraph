@@ -3,8 +3,8 @@
  * Replace your existing frontend/src/lib/api.ts with this file.
  */
 import type {
-  CrossInsight, Graph, Insight, ModuleKey, Patient, PatientDetail,
-  RecallResult, RememberResult,
+  CrossInsight, Graph, Insight, ModuleKey, NarrativeResult, Patient, PatientDetail,
+  RecallResult, RememberResult, SandboxResult, SentinelResult,
 } from "./types";
 
 const BASE = import.meta.env.VITE_API_BASE ?? "/api";
@@ -44,6 +44,14 @@ export const api = {
     post<{ ok: boolean; source: string; message: string }>(`/patients/${id}/improve`, {}),
   forget: (id: string) =>
     post<{ ok: boolean; source: string; message: string }>(`/patients/${id}/forget`, {}),
+
+  // ── HealthForecast (module 8) — custom endpoints, see backend/app/healthforecast.py ──
+  forecastSandbox: (id: string, levers: Record<string, number>) =>
+    post<SandboxResult>(`/healthforecast/sandbox/${id}`, { levers }),
+  forecastSentinel: (id: string, query?: string) =>
+    post<SentinelResult>(`/healthforecast/sentinel/${id}`, query ? { query } : {}),
+  forecastNarrative: (id: string, focus?: string) =>
+    post<NarrativeResult>(`/healthforecast/narrative/${id}`, focus ? { focus } : {}),
 };
 
 export const MODULES: { key: ModuleKey; name: string; tagline: string; icon: string }[] = [
@@ -54,6 +62,7 @@ export const MODULES: { key: ModuleKey; name: string; tagline: string; icon: str
   { key: "pathos",     name: "Pathos",     tagline: "Mental-Health Memory",        icon: "🫀" },
   { key: "neurograph", name: "NeuroGraph", tagline: "Cognitive Decline",           icon: "🧠" },
   { key: "omnigest",   name: "OmniGest",   tagline: "Multimodal Ingestion Hub",    icon: "📂" },
+  { key: "healthforecast", name: "HealthForecast", tagline: "Predictive Risk & Progression Engine", icon: "📈" }, // ← NEW
 ];
 
 export const MODULE_COLOR: Record<ModuleKey, string> = {
@@ -64,4 +73,5 @@ export const MODULE_COLOR: Record<ModuleKey, string> = {
   pathos:     "#ffb86b",
   neurograph: "#b388ff",
   omnigest:   "#0fe0c8",
+  healthforecast: "#ffb86b", // ← NEW — primary accent (electric green #37d6b3 used as secondary in-page)
 };
