@@ -26,6 +26,8 @@ MODULE_META = {
                    "accent": "#b388ff"},
     "healthforecast": {"name": "HealthForecast", "tagline": "Predictive Risk & Progression Engine",
                         "accent": "#37d6b3"},  # ← NEW
+    "omnigest": {"name": "OmniGest", "tagline": "Multimodal Ingestion Hub",
+                 "accent": "#0fe0c8"},  # ← ensures module_payload("omnigest") never KeyErrors
 }
 
 # RxShield hardcoded interaction knowledge (hackathon-simple, explainable).

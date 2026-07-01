@@ -234,9 +234,70 @@ def _auto_tag_modules(entity_label: str) -> List[str]:
 # ── Mock extraction (demo / no Gemini key) ───────────────────────────────────
 
 def _mock_extraction(filename: str) -> ExtractionResponse:
+    """Deterministic demo extraction when no Gemini key is configured.
+    Four modality scenarios — brain MRI, lung CT, chest X-ray, blood report —
+    detected by filename keywords. Upload any file; name it to get the right mock."""
     name_lower = (filename or "").lower()
-    is_xray = any(x in name_lower for x in [
-                  "xray", "x-ray", "chest", "scan", "dcm", "dicom"])
+    is_mri  = any(x in name_lower for x in ["mri", "brain", "neuro", "flair", "t1", "t2"])
+    is_ct   = any(x in name_lower for x in ["ct_", "_ct", "lung", "pulm", "thorax", "nodule", "hrct"])
+    is_xray = any(x in name_lower for x in ["xray", "x-ray", "chest", "cxr", "dcm", "dicom"])
+
+    if is_mri:
+        entities = [
+            ClinicalEntity(label="T2 hyperintense lesion — right frontal lobe", type="Imaging Finding",
+                           status="abnormal", confidence=84, module_tags=["curie", "neurograph"]),
+            ClinicalEntity(label="Mild cerebral atrophy (age-appropriate)", type="Imaging Finding",
+                           status="borderline", confidence=78, module_tags=["neurograph"]),
+            ClinicalEntity(label="Periventricular white matter changes", type="Imaging Finding",
+                           status="borderline", confidence=72, module_tags=["curie", "neurograph"]),
+            ClinicalEntity(label="No midline shift detected", type="Imaging Finding",
+                           status="normal", confidence=95, module_tags=["curie"]),
+            ClinicalEntity(label="No acute haemorrhage", type="Imaging Finding",
+                           status="normal", confidence=96, module_tags=["curie"]),
+        ]
+        return ExtractionResponse(
+            ok=True,
+            metadata=DocumentMetadata(document_date="2024-11-20",
+                                      clinic_name="Regional Neuroscience Centre",
+                                      document_type="MRI"),
+            entities=entities,
+            module_tags=["curie", "neurograph"],
+            summary_text=(
+                "Brain MRI demonstrates a T2 hyperintense lesion in the right frontal lobe "
+                "requiring clinical correlation and follow-up. Mild periventricular white matter "
+                "changes noted, consistent with small vessel ischaemic disease. Age-appropriate "
+                "mild cortical atrophy. No midline shift, mass effect, or acute haemorrhage identified."
+            ),
+        )
+
+    if is_ct:
+        entities = [
+            ClinicalEntity(label="Right lower lobe pulmonary nodule — 8mm", type="Imaging Finding",
+                           value="8", unit="mm", status="abnormal", confidence=88,
+                           module_tags=["curie"]),
+            ClinicalEntity(label="Ground-glass opacity — left upper lobe", type="Imaging Finding",
+                           status="borderline", confidence=74, module_tags=["curie"]),
+            ClinicalEntity(label="Mediastinal lymphadenopathy — borderline", type="Imaging Finding",
+                           status="borderline", confidence=65, module_tags=["curie"]),
+            ClinicalEntity(label="No pleural effusion", type="Imaging Finding",
+                           status="normal", confidence=93, module_tags=["curie"]),
+            ClinicalEntity(label="Emphysematous changes — bilateral apices", type="Imaging Finding",
+                           status="abnormal", confidence=82, module_tags=["curie", "nutrisim"]),
+        ]
+        return ExtractionResponse(
+            ok=True,
+            metadata=DocumentMetadata(document_date="2024-11-28",
+                                      clinic_name="Chest Imaging Unit",
+                                      document_type="CT Scan"),
+            entities=entities,
+            module_tags=["curie", "nutrisim"],
+            summary_text=(
+                "CT chest reveals an 8mm right lower lobe pulmonary nodule requiring "
+                "Fleischner Society follow-up. Ground-glass opacity in left upper lobe and "
+                "borderline mediastinal lymphadenopathy noted. Bilateral apical emphysematous "
+                "changes. No pleural effusion or consolidation."
+            ),
+        )
 
     if is_xray:
         entities = [

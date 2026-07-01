@@ -11,7 +11,7 @@ import { GlassCard, Pill, SectionTitle, Spinner } from "../components/ui";
 import { api, MODULE_COLOR, MODULES } from "../lib/api";
 import { usePatients } from "../lib/PatientContext";
 import { usePatientData } from "../lib/usePatientData";
-import type { GraphNode, ModuleKey } from "../lib/types";
+import type { Graph, GraphNode, ModuleKey } from "../lib/types";
 
 export default function GraphExplorer() {
   const { selectedId } = usePatients();

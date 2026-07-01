@@ -79,12 +79,6 @@ def get_patient(pid: str):
 @app.get("/api/patients/{pid}/graph")
 def get_graph(pid: str, until: Optional[str] = None):
     g = data_store.graph(pid)
-    # Diagnostic log — shows seed+live node counts on every graph request.
-    # Remove after confirming graph is correct.
-    node_mods = {}
-    for n in g["nodes"]:
-        node_mods[n.get("module", "?")] = node_mods.get(n.get("module", "?"), 0) + 1
-    print(f"[graph] {pid}: {len(g['nodes'])} nodes, {len(g['edges'])} edges | by module: {node_mods}")
     if not until:
         return g
     nodes = [n for n in g["nodes"] if not n.get("date") or n["date"] <= until]
