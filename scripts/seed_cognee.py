@@ -38,14 +38,13 @@ def _load_dotenv() -> None:
             if not line or line.startswith("#") or "=" not in line:
                 continue
             key, val = line.split("=", 1)
-            os.environ.setdefault(
-                key.strip(), val.strip().strip('"').strip("'"))
+            os.environ.setdefault(key.strip(), val.strip().strip('"').strip("'"))
 
 
 _load_dotenv()
 
-BASE = os.getenv("COGNEE_API_URL", "").rstrip("/")
-KEY = os.getenv("COGNEE_API_KEY", "")
+BASE    = os.getenv("COGNEE_API_URL", "").rstrip("/")
+KEY     = os.getenv("COGNEE_API_KEY", "")
 TIMEOUT = float(os.getenv("COGNEE_TIMEOUT", "120"))
 
 
@@ -86,7 +85,7 @@ def main() -> int:
 
     try:
         patients = json.load(open(os.path.join(DATA, "patients.json")))
-        events = json.load(open(os.path.join(DATA, "events.json")))
+        events   = json.load(open(os.path.join(DATA, "events.json")))
         insights = json.load(open(os.path.join(DATA, "insights.json")))
     except FileNotFoundError as e:
         print(f"\nERROR: {e}\nRun this script from the project root folder.")
@@ -113,8 +112,7 @@ def main() -> int:
         for pid in targets:
             doc = patient_document(pid, patients, events, insights)
             if not doc:
-                print(f"  skip {pid}: no data")
-                continue
+                print(f"  skip {pid}: no data"); continue
 
             print(f"  {pid} ({len(doc)} chars) ...", end=" ", flush=True)
 
@@ -125,8 +123,7 @@ def main() -> int:
                 json={"data": doc, "dataset_name": pid},
             )
             if not r.is_success:
-                print(f"FAILED add {r.status_code}: {r.text[:120]}")
-                continue
+                print(f"FAILED add {r.status_code}: {r.text[:120]}"); continue
             print("added", end=" ", flush=True)
 
             # Step 2: cognify — builds the actual knowledge graph
@@ -135,8 +132,7 @@ def main() -> int:
                 headers=headers,
                 json={"datasets": [pid], "run_in_background": False},
             )
-            print(
-                "cognified ✓" if r2.is_success else f"cognify failed {r2.status_code}")
+            print("cognified ✓" if r2.is_success else f"cognify failed {r2.status_code}")
             time.sleep(0.5)
 
         print("\n  Running improve() on all datasets ...", end=" ", flush=True)
